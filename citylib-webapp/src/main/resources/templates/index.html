@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CityLib</title>
+
+    <link rel="stylesheet" type="text/css" href="webjars/materializecss/1.0.0/css/materialize.min.css" />
+
+</head>
+<body>
+
+<nav>
+    <div class="nav-wrapper">
+        <a th:href="@{|/|}" class="brand-logo">Application CityLib</a>
+    </div>
+</nav>
+
+<div class="row">
+    <div th:each="book : ${books}">
+        <div class="col m2">
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+                <span th:text="${book.title}" class="card-title" />
+                <p>
+                    <span th:text="${book.author}" />&nbsp;-&nbsp;<span th:text="${book.collection}" />
+                </p>
+            </div>
+            <div class="card-action">
+                <a th:href="@{|/book-details/${book.id}|}">Détails</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript" src="webjars/materializecss/1.0.0/js/materialize.min.js"></script>
+
+</body>
+</html>
