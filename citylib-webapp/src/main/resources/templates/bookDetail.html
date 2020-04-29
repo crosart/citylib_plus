@@ -3,14 +3,14 @@
 <head>
     <title>CityLib</title>
 
-    <link rel="stylesheet" type="text/css" href="webjars/materializecss/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/uikit.min.css" th:href="@{/css/uikit.min.css}"  />
 
 </head>
 <body>
 
-<nav>
-    <div class="nav-wrapper">
-        <a th:href="@{|/|}" class="brand-logo">Application CityLib</a>
+<nav class="uk-navbar-container uk-margin" uk-navbar>
+    <div class="uk-navbar-left">
+        <a class="uk-navbar-item uk-logo" href="#">CityLib</a>
     </div>
 </nav>
 
@@ -19,7 +19,8 @@
     <p th:text="${book.author}" />
 </div>
 
-<script type="text/javascript" src="webjars/materializecss/1.0.0/js/materialize.min.js"></script>
+<script type="text/javascript" src="js/uikit.min.js" th:src="@{/js/uikit.min.js}"></script>
+<script type="text/javascript" src="js/uikit-icons.min.js" th:src="@{/js/uikit-icons.min.js}"></script>
 
 </body>
 </html>

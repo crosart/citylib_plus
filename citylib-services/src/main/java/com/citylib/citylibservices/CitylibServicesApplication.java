@@ -1,4 +1,4 @@
-package com.citylib.citylibbooks;
+package com.citylib.citylibservices;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableSwagger2
-public class CitylibBooksApplication {
+public class CitylibServicesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CitylibBooksApplication.class, args);
+		SpringApplication.run(CitylibServicesApplication.class, args);
 	}
 
 }

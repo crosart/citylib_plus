@@ -1,10 +1,10 @@
-package com.citylib.citylibbooks;
+package com.citylib.citylibservices;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CitylibBooksApplicationTests {
+class CitylibServicesApplicationTests {
 
 	@Test
 	void contextLoads() {

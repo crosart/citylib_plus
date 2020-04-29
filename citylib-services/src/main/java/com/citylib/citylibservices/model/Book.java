@@ -1,18 +1,14 @@
-package com.citylib.citylibbooks.model;
+package com.citylib.citylibservices.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+
+import lombok.Data;
 
 import javax.persistence.*;
 
 
 @Entity
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Table(schema = "citylib_books", name = "books")
+@Data
+@Table(schema = "citylib_db", name = "books")
 public class Book {
 
     @Id
@@ -25,8 +21,7 @@ public class Book {
     private String editor;
     private String collection;
     private int year;
-
-    @JsonIgnore
-    private int availability;
+    private String summary;
+    private int quantity;
 
 }

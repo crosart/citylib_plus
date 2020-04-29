@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "citylib-books")
+@FeignClient(name = "citylib-services")
 public interface CitylibBooksProxy {
 
     @GetMapping(value = "/books")
