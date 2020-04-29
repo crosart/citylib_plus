@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @FeignClient(name = "citylib-services")
-public interface CitylibBooksProxy {
+public interface CitylibServicesProxy {
 
     @GetMapping(value = "/books")
     List<BookBean> getAllBooks();

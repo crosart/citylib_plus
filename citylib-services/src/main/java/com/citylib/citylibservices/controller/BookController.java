@@ -1,7 +1,9 @@
 package com.citylib.citylibservices.controller;
 
 import com.citylib.citylibservices.model.Book;
+import com.citylib.citylibservices.model.Loan;
 import com.citylib.citylibservices.repository.BookRepository;
+import com.citylib.citylibservices.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private LoanRepository loanRepository;
 
     @GetMapping(value = "/books")
     public List<Book> getAllBooks() {
@@ -24,7 +28,12 @@ public class BookController {
 
     @GetMapping(value = "/books/{id}")
     public Optional<Book> getBookById(@PathVariable long id) {
-        return bookRepository.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
+        List<Loan> activeLoans = loanRepository.findByBookIdAndReturnedFalse(id);
+        
+        book.get().setAvailable(book.get().getQuantity() - activeLoans.size());
+
+        return book;
     }
 
     @PostMapping(value = "/books")

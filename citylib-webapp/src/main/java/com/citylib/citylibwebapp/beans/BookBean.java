@@ -14,8 +14,10 @@ public class BookBean {
     private String title;
     private String author;
     private String editor;
-    private String collection;
     private int year;
-    private int availability;
+    private String summary;
+    private int quantity;
+    private String image;
+    private int available;
 
 }

@@ -19,9 +19,12 @@ public class Book {
     private String title;
     private String author;
     private String editor;
-    private String collection;
     private int year;
     private String summary;
     private int quantity;
+    private String image;
+
+    @Transient
+    private int available;
 
 }

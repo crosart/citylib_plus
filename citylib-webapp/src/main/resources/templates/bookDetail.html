@@ -15,8 +15,9 @@
 </nav>
 
 <div class="row">
-    <p th:text="${book.title}" class="text" />&nbsp;<span th:text="${book.year}" class="badge" />
+    <p th:text="${book.title}" />&nbsp;<span th:text="${book.year}" class="uk-badge" />
     <p th:text="${book.author}" />
+    Il reste actuellement <span th:text="${book.available}" /> exemplaires disponibles au prêt !
 </div>
 
 <script type="text/javascript" src="js/uikit.min.js" th:src="@{/js/uikit.min.js}"></script>
