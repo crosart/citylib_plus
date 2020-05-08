@@ -3,13 +3,27 @@
 <head>
     <title>CityLib</title>
 
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.4.1-1/css/bootstrap.min.css" th:href="@{webjars/bootstrap/4.4.1-1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
 
 </head>
 <body>
 
 <nav th:replace="fragments/statics.html :: navbar">
 </nav>
+
+<div class="container-fluid" style="padding-top:-30px;background: url('https://i.ibb.co/HtKFKRB/bg-library.jpg') no-repeat top center;background-size: cover;height: 500px;">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="container text-center">
+            <div>
+            <img src="https://i.ibb.co/T8nCqmf/logo-full-white.png" alt="logo-full-white" width="500px" border="0">
+        </div>
+        <div>
+            <h2 class="text-light font-italic">Votre bibliothèque en ligne</h2>
+        </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="row">
     <div th:each="book : ${books}">
@@ -22,7 +36,7 @@
                 </p>
             </div>
             <div class="card-action">
-                <a th:href="@{|/book-details/${book.id}|}">Détails</a>
+                <a th:href="@{|/books/${book.id}|}">Détails</a>
             </div>
         </div>
     </div>
