@@ -21,12 +21,12 @@ public class BookController {
     @Autowired
     private LoanRepository loanRepository;
 
-    @GetMapping(value = "/books")
+    @GetMapping(value="/books")
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    @GetMapping(value = "/books/{id}")
+    @GetMapping(value="/books/{id}")
     public Optional<Book> getBookById(@PathVariable long id) {
         Optional<Book> book = bookRepository.findById(id);
         List<Loan> activeLoans = loanRepository.findByBookIdAndReturnedFalse(id);
@@ -36,7 +36,7 @@ public class BookController {
         return book;
     }
 
-    @PostMapping(value = "/books")
+    @PostMapping(value="/books")
     public ResponseEntity<Void> addBook(@RequestBody Book book) {
         Book addedBook = bookRepository.save(book);
         if (addedBook == null) {
@@ -50,12 +50,12 @@ public class BookController {
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping(value = "/books/{id}")
+    @DeleteMapping(value="/books/{id}")
     public void deleteBook(@PathVariable long id) {
         bookRepository.deleteById(id);
     }
 
-    @PutMapping(value = "/books")
+    @PutMapping(value="/books")
     public void updateBook(@RequestBody Book book) {
         bookRepository.save(book);
     }
