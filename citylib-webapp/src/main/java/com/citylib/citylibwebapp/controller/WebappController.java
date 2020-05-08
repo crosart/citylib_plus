@@ -5,6 +5,7 @@ import com.citylib.citylibwebapp.proxies.CitylibServicesProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,20 +15,20 @@ import java.util.List;
 public class WebappController {
 
     @Autowired
-    private CitylibServicesProxy ServicesProxy;
+    private CitylibServicesProxy servicesProxy;
 
-    @RequestMapping("/")
+    @GetMapping(value="/")
     public String accueil(Model model) {
-        List<BookBean> books = ServicesProxy.getAllBooks();
+        List<BookBean> books = servicesProxy.getAllBooks();
 
         model.addAttribute("books", books);
 
         return "index";
     }
 
-    @RequestMapping("/book-details/{id}")
+    @GetMapping(value="/books/{id}")
     public String bookDetail(@PathVariable int id, Model model) {
-        BookBean book = ServicesProxy.getBookById(id);
+        BookBean book = servicesProxy.getBookById(id);
 
         model.addAttribute("book", book);
 
