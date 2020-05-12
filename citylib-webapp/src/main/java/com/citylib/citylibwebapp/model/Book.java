@@ -1,13 +1,9 @@
-package com.citylib.citylibwebapp.beans;
+package com.citylib.citylibwebapp.bean;
 
 import lombok.*;
 
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class BookBean {
+@Data
+public class Book {
 
     private long id;
     private String isbn;

@@ -1,15 +1,15 @@
 package com.citylib.citylibservices.controller;
 
-import com.citylib.citylibservices.model.Book;
-import com.citylib.citylibservices.model.Loan;
+import com.citylib.citylibservices.dto.UserDto;
+import com.citylib.citylibservices.exception.UserAlreadyExistsException;
 import com.citylib.citylibservices.model.User;
 import com.citylib.citylibservices.repository.UserRepository;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,10 +25,27 @@ public class UserController {
         return user;
     }
 
-    @GetMapping(value = "/users/email/{email}")
+    @GetMapping("/users/email/{email}/")
     public Optional<User> getUserByEmail(@PathVariable String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(StringEscapeUtils.unescapeHtml(email));
 
         return user;
+    }
+
+    @PostMapping("/users/register")
+    public ResponseEntity<User> registerUser(@RequestBody User userDto) {
+        User user = new User();
+        Optional<User> existing = userRepository.findByEmail(userDto.getEmail());
+        if (existing.isPresent()) {
+            throw new UserAlreadyExistsException("Un compte existe déjà pour l'adresse email : " + userDto.getEmail());
+        } else {
+            user.setEmail(userDto.getEmail());
+            user.setPassword(userDto.getPassword());
+            user.setUsername(userDto.getUsername());
+            userRepository.save(user);
+        }
+
+        return new ResponseEntity<User>(userDto, HttpStatus.CREATED);
+
     }
 }
