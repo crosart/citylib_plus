@@ -1,4 +1,4 @@
-package com.citylib.citylibwebapp.bean;
+package com.citylib.citylibwebapp.model;
 
 import lombok.*;
 

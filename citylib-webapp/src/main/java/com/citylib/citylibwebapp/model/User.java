@@ -1,6 +1,8 @@
-package com.citylib.citylibwebapp.bean;
+package com.citylib.citylibwebapp.model;
 
 import lombok.Data;
+
+import java.util.Collection;
 
 @Data
 public class User {
@@ -9,6 +11,6 @@ public class User {
     private String email;
     private String password;
     private String username;
-    private boolean enabled;
+    private Collection<Role> roles;
 
 }
