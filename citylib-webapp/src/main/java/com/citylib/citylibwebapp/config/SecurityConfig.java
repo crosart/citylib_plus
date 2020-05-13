@@ -1,6 +1,5 @@
 package com.citylib.citylibwebapp.config;
 
-import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
 import com.citylib.citylibwebapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

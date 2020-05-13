@@ -4,6 +4,7 @@ import com.citylib.citylibservices.model.Loan;
 import com.citylib.citylibservices.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -19,4 +20,10 @@ public class LoanController {
     public List<Loan> getCurrentDueLoans() {
         return loanRepository.findByDueLessThanEqualAndReturnedFalse(LocalDate.now());
     }
+
+    //TODO Extend Loans
+
+//    @GetMapping("loans/user/{id}")
+//    public List<Loan> getUserLoans(@PathVariable "id" long id)
+
 }

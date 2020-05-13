@@ -1,8 +1,9 @@
 package com.citylib.citylibservices.controller;
 
-import com.citylib.citylibservices.dto.UserDto;
 import com.citylib.citylibservices.exception.UserAlreadyExistsException;
+import com.citylib.citylibservices.model.Role;
 import com.citylib.citylibservices.model.User;
+import com.citylib.citylibservices.repository.RoleRepository;
 import com.citylib.citylibservices.repository.UserRepository;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @RestController
@@ -17,6 +19,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @GetMapping(value = "/users/{id}")
     public Optional<User> getUserById(@PathVariable long id) {
@@ -28,7 +33,9 @@ public class UserController {
     @GetMapping("/users/email/{email}/")
     public Optional<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userRepository.findByEmail(StringEscapeUtils.unescapeHtml(email));
-
+        Collection<Role> defaultRoles = null;
+        defaultRoles.add(roleRepository.findByDefTrue());
+        user.get().setRoles(defaultRoles);
         return user;
     }
 
