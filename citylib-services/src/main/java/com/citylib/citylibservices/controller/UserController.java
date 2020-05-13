@@ -11,8 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -33,9 +32,11 @@ public class UserController {
     @GetMapping("/users/email/{email}/")
     public Optional<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userRepository.findByEmail(StringEscapeUtils.unescapeHtml(email));
-        Collection<Role> defaultRoles = null;
-        defaultRoles.add(roleRepository.findByDefTrue());
-        user.get().setRoles(defaultRoles);
+        if (user.isPresent()) {
+            Collection<Role> defaultRoles = new ArrayList<>();
+            defaultRoles.add(roleRepository.findByDefTrue());
+            user.get().setRoles(defaultRoles);
+        }
         return user;
     }
 
