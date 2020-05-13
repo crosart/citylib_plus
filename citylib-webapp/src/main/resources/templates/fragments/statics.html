@@ -1,31 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 </head>
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-md bg-primary navbar-dark" style="max-height: 47px;">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-           <ul class="navbar-nav">
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="/"><i class="fas fa-book-open"></i>&nbsp;&nbsp;CITYLIB</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="#">INFOS</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="#">AGENDA</a>
-                </li>
-                <li class="nav-item mx-2">
-                   <a class="nav-link" href="#">BIBLIOTHÈQUE</a>
-                </li>
-           </ul>
-    </div>
-    <div class="btn-group" role="group" aria-label="Compte" style="position: absolute;right: 12px; top: 8px;">
-        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-user"></i>&nbsp;MON COMPTE</a>
+<nav th:fragment="navbar" class="navbar bg-primary navbar-dark">
+    <a class="navbar-brand" href="/" style="font-family: Lato"><img src="/images/logo/logo_mini.png" class="d-inline-block align-top" alt=""/>&nbsp;&nbsp;<strong>citylib</strong></a>
+
+    <div sec:authorize="isAuthenticated()" class="btn-group" role="group" aria-label="Compte" style="position: absolute;right: 12px; top: 12px;">
+        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-user"></i>&nbsp;&nbsp;MON COMPTE</a>
         <a href="/logout" class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></a>
+    </div>
+    <div sec:authorize="isAnonymous()" class="btn-group" role="group" aria-label="Compte" style="position: absolute;right: 12px; top: 12px;">
+        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-user"></i>&nbsp;&nbsp;SE CONNECTER</a>
+        <a href="/logout" class="btn btn-info btn-sm">S'INSCRIRE&nbsp;&nbsp;<i class="fas fa-user-plus"></i></a>
     </div>
 </nav>
 
