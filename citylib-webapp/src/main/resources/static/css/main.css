@@ -1,5 +1,5 @@
 h1 {
-    color: #78ab46;
+    color: #ff6b17;
 }
 
 .error-message {
@@ -8,4 +8,8 @@ h1 {
 
 .error-message:first-letter {
     text-transform: capitalize;
+}
+
+.bg-primary {
+    background-color: #2d318d !important;
 }

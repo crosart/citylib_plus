@@ -7,59 +7,69 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 
 </head>
-<body>
-<div class="container">
+<body class="bg-primary" style="overflow: hidden;background: url('/images/background/bg_login.jpg') no-repeat fixed top;background-size: cover;">
 
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h1>Login page</h1>
+<nav th:replace="fragments/statics.html :: navbar">
+</nav>
+
+<div class="container-fluid text-light" style="height: 100vh;">
+
+    <div class="row h-100 align-items-center">
+        <div class="col-md-6 mx-auto">
+            <div class="text-center mb-5">
+                <img src="/images/logo/logo_login.png" height="150" width="131"/>
+            </div>
             <form th:action="@{/login}" method="post">
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">
-                        Invalid username or password.
+                        Nom d'utilisateur ou mot de passe incorrect.
                     </div>
                 </div>
                 <div th:if="${param.logout}">
                     <div class="alert alert-info">
-                        You have been logged out.
+                        Vous avez été déconnecté.
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="username">Username</label>:
                     <input type="text"
                            id="username"
                            name="username"
-                           class="form-control"
+                           class="form-control mx-auto"
+                           style="max-width: 300px"
                            autofocus="autofocus"
-                           placeholder="Username"/>
+                           placeholder="Adresse Email"/>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>:
                     <input type="password"
                            id="password"
                            name="password"
-                           class="form-control"
-                           placeholder="Password"/>
+                           class="form-control mx-auto"
+                           style="max-width: 300px"
+                           placeholder="Mot de passe"/>
                 </div>
                 <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3">
+                    <div class="row justify-content-center">
+                        <div>
                             <input type="submit"
                                    name="login-submit"
                                    id="login-submit"
-                                   class="form-control btn btn-info"
-                                   value="Log In"/>
+                                   class="form-control btn btn-info mx-auto font-weight-bold mt-4"
+                                   style="max-width: 300px"
+                                   value="CONNEXION"/>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <span>New user? <a href="/" th:href="@{/registration}">Register here</a></span>
+                <div class="form-group text-center mt-5">
+                    <span>Nouvel utilisateur ? <a href="/" th:href="@{/registration}" class="text-info">Enregistrez-vous !</a></span>
                 </div>
             </form>
         </div>
     </div>
 
 
+</div>
+
+<div th:replace="fragments/statics.html :: scripts">
 </div>
 </body>
 </html>
