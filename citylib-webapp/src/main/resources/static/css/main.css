@@ -13,3 +13,40 @@ h1 {
 .bg-primary {
     background-color: #2d318d !important;
 }
+
+.sticky-top.scrolled {
+    background-color: #fff !important;
+    transition: background-color 200ms linear;
+}
+
+.badge-info {
+    color: #fff;
+    background-color: #ff6b17; !important;
+}
+
+a.badge-info:hover, a.badge-info:focus {
+    color: #fff;
+    background-color: #ff6b17; !important
+}
+
+.badge-primary {
+    color: #fff;
+    background-color: #2d318d; !important;
+}
+
+a.badge-primary:hover, a.badge-primary:focus {
+    color: #fff;
+    background-color: #2d318d; !important
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #2d318d;
+    border-color: #2d318d;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #5342ba;
+    border-color: #5342ba;
+}
