@@ -1,9 +1,13 @@
 package com.citylib.citylibservices.controller;
 
+import com.citylib.citylibservices.config.PropertiesConfig;
 import com.citylib.citylibservices.model.Loan;
 import com.citylib.citylibservices.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,9 @@ public class LoanController {
 
     @Autowired
     private LoanRepository loanRepository;
+    @Autowired
+    private PropertiesConfig appProperties;
+
 
     @GetMapping("/due")
     public List<Loan> getCurrentDueLoans() {
@@ -26,7 +33,8 @@ public class LoanController {
 
     @GetMapping("/user/{id}")
     public Page<Loan> getUserLoansByUserId(@PathVariable long id) {
-        return loanRepository.findByUserId(id);
+        Pageable pageable = PageRequest.of(0, appProperties.getLastBooks(), Sort.by("id").descending());
+        return loanRepository.findByUserId(id, pageable);
     }
 
     @GetMapping("/extend/{id}")
