@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>CityLib - Mes emprunts</title>
+    <div th:replace="fragments/statics.html :: head"></div>
+</head>
+<body class="bg-primary text-light">
+
+<nav th:replace="fragments/statics.html :: navbar">
+</nav>
+
+<div sec:authorize="isAuthenticated()">
+    <div class="display-4">
+        Bienvenue <strong th:text="${loggedUser.username}"></strong>
+    </div>
+</div>
+
+<div>
+    Retrouvez la liste de vos emprunts en cours et passés :
+</div>
+
+<div th:each="loanBean : ${userLoans}" class="col-xl-8 mx-auto">
+    <div th:unless="${loanBean.returned}">
+        <div class="jumbotron my-5 shadow-lg py-5" style="background: url('/images/background/bg_jumbotron.jpg') no-repeat center fixed;background-size: cover">
+            <div class="media">
+                <img th:src="${loanBean.book.image}" class="shadow rounded-lg align-self-center d-none d-xl-block mr-5" width="150" height="auto" />
+                <div class="media-body">
+                    <a th:href="@{|/books/id/${loanBean.book.id}|}" style="text-decoration: none"><h1 class="display-4 text-light"><span th:text="${loanBean.book.title}" /></h1></a>
+                    <p class="lead text-light mb-0">Un livre de&nbsp;<span th:text="${loanBean.book.author}" />&nbsp;aux éditions&nbsp;&quot;<span th:text="${loanBean.book.editor}" />&quot;</p>
+                    <p class="mt-0">
+                        <span th:text="${loanBean.book.genre}" class="shadow badge badge-info" />&nbsp;
+                        <span th:text="${loanBean.book.year}" class="shadow badge badge-primary" />
+                    </p>
+                    <hr class="my-4">
+                    <div th:if="${loanBean.expired && loanBean.extended && !loanBean.returned}">
+                        <div class="alert alert-danger">
+                            Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" /> et doit être retourné à la bibliothèque immédiatement !
+                        </div>
+                    </div>
+                    <div th:if="${loanBean.expired && !loanBean.extended && !loanBean.returned}">
+                        <div class="alert alert-warning">
+                            Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />.
+                        </div>
+                        <p><a th:href="@{|/loans/extend/${loanBean.id}|}" class="btn btn-primary">Vous pouvez étendre la durée de cet emprunt de 4 semaines en cliquant ici !</a></p>
+                    </div>
+                    <div th:if="${!loanBean.expired && !loanBean.returned}">
+                        Rappel : Ce livre doit être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${loanBean.returned}">
+        <div class="jumbotron my-5 shadow-lg py-5" style="background: url('/images/background/bg_jumbotron_orange.jpg') no-repeat center fixed;background-size: cover">
+            <div class="media">
+                <img th:src="${loanBean.book.image}" class="shadow rounded-lg align-self-center d-none d-xl-block mr-5" width="150" height="auto" />
+                <div class="media-body">
+                    <a th:href="@{|/books/id/${loanBean.book.id}|}" style="text-decoration: none"><h1 class="display-4 text-light"><span th:text="${loanBean.book.title}" /></h1></a>
+                    <p class="lead text-light mb-0">Un livre de&nbsp;<span th:text="${loanBean.book.author}" />&nbsp;aux éditions&nbsp;&quot;<span th:text="${loanBean.book.editor}" />&quot;</p>
+                    <p class="mt-0">
+                        <span th:text="${loanBean.book.genre}" class="shadow badge badge-info" />&nbsp;
+                        <span th:text="${loanBean.book.year}" class="shadow badge badge-primary" />
+                    </p>
+                    <hr class="my-4">
+                    <div th:if="${loanBean.expired && loanBean.extended && !loanBean.returned}">
+                        <div class="alert alert-danger">
+                            Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" /> et doit être retourné à la bibliothèque immédiatement !
+                        </div>
+                    </div>
+                    <div th:if="${loanBean.expired && !loanBean.extended && !loanBean.returned}">
+                        <div class="alert alert-warning">
+                            Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />.
+                        </div>
+                        <p><a th:href="@{|/loans/extend/${loanBean.id}|}" class="btn btn-primary">Vous pouvez étendre la durée de cet emprunt de 4 semaines en cliquant ici !</a></p>
+                    </div>
+                    <div th:if="${!loanBean.expired && !loanBean.returned}">
+                        Rappel : Ce livre doit être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/statics.html :: scripts"></div>
+
+</body>
+</html>
