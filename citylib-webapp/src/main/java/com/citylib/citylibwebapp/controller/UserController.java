@@ -5,6 +5,7 @@ import com.citylib.citylibwebapp.model.LoanBean;
 import com.citylib.citylibwebapp.model.UserBean;
 import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ public class UserController {
     @GetMapping("/account")
     public String showAccountPage(Model model, Principal principal) {
         UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
-        List<LoanBean> userLoans = servicesProxy.getUserLoans(loggedUser.getId());
+        Page<LoanBean> userLoans = servicesProxy.getUserLoans(loggedUser.getId());
         for (LoanBean loanBean : userLoans) {
             if (loanBean.getDue().isBefore(LocalDate.now())) {
                 loanBean.setExpired(true);
