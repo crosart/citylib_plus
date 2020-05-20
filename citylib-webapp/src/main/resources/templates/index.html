@@ -1,50 +1,73 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>CityLib</title>
-
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <div th:replace="fragments/statics.html :: head"></div>
 </head>
-<body>
+<body class="bg-primary">
 
 <nav th:replace="fragments/statics.html :: navbar">
 </nav>
 
-<div class="container-fluid" style="padding-top:-30px;background: url('https://i.ibb.co/HtKFKRB/bg-library.jpg') no-repeat top center;background-size: cover;height: 500px;">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="container text-center">
-            <div>
-            <img src="https://i.ibb.co/T8nCqmf/logo-full-white.png" alt="logo-full-white" width="500px" border="0">
-        </div>
-        <div>
-            <h2 class="text-light font-italic">Votre bibliothèue en ligne</h2>
-        </div>
-        </div>
-    </div>
+<div class="sticky-top pt-4 pb-5" style="background: linear-gradient(180deg, rgba(45,49,141,1) 50%, rgba(255,255,255,0) 100%);">
+        <form th:action="@{/books/search/}" method="get" class="input-group col-md-6 offset-md-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fas fa-search"></i></div>
+            </div>
+            <input type="search" class="form-control" name="query" placeholder="Chercher un livre, auteur ou ISBN-13">
+            <input type="hidden" name="page" value="1">
+        </form>
 </div>
 
-
-<div class="row">
-    <div th:each="book : ${books}">
-        <div class="col m2">
-        <div class="card blue-grey darken-1">
-            <div class="card-content white-text">
-                <span th:text="${book.title}" class="card-title" />
+<div class="container-fluid d-none d-xl-block" style="background: url('/images/background/bg_drop.jpg') no-repeat fixed center;background-size: cover;height: 600px;margin-top: -100px">
+    <div class="row h-100 justify-content-center">
+        <div class="media">
+            <img src="/images/logo/logo_full.png" width="150" class="align-self-center mr-5" />
+            <div class="media-body align-self-center">
                 <p>
-                    <span th:text="${book.author}" />&nbsp;-&nbsp;<span th:text="${book.editor}" />
+                    <strong class="display-4 text-light">Votre bibliothèque en ligne</strong>
+                </p>
+                <p class="text-center">
+                    <a href="#" class="text-light"><i class="fab fa-twitter-square fa-2x"></i></a>&nbsp;&nbsp;
+                    <a href="#" class="text-light"><i class="fab fa-facebook-square fa-2x"></i></a>&nbsp;&nbsp;
+                    <a href="#" class="text-light"><i class="fab fa-instagram-square fa-2x"></i></a>
                 </p>
             </div>
-            <div class="card-action">
-                <a th:href="@{|/books/${book.id}|}">Détails</a>
+        </div>
+    </div>
+</div>
+
+<div style="background: url('/images/gradient_divider_btm.png');height: 100px;margin-top: -100px;">
+</div>
+
+<div class="text-center mb-5">
+    <p class="mb-1">
+        <strong class="display-4 text-light">Nos derniers arrivages</strong>
+    </p>
+        <strong class="display-4 text-light"><i class="fas fa-chevron-down"></i></strong>
+</div>
+
+<div th:each="bookBean : ${books}" class="col-xl-8 mx-auto">
+    <div class="jumbotron my-5 shadow-lg py-5" style="background: url('/images/background/bg_jumbotron.jpg') no-repeat center fixed;background-size: cover">
+        <div class="media">
+            <img th:src="${bookBean.image}" class="shadow rounded-lg align-self-center d-none d-xl-block mr-5" width="150" height="auto" />
+            <div class="media-body">
+                <a th:href="@{|/books/id/${bookBean.id}|}" class="stretched-link" style="text-decoration: none"><h1 class="display-4 text-light"><span th:text="${bookBean.title}" /></h1></a>
+                <p class="lead text-light mb-0">Un livre de&nbsp;<span th:text="${bookBean.author}" />&nbsp;aux éditions&nbsp;&quot;<span th:text="${bookBean.editor}" />&quot;</p>
+                <p class="mt-0">
+                    <span th:text="${bookBean.genre}" class="shadow badge badge-info" />&nbsp;
+                    <span th:text="${bookBean.year}" class="shadow badge badge-primary" />
+                </p>
+                <hr class="my-4">
+                <p class="text-light"><span th:text="${bookBean.summary}" style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 5;" /></p>
             </div>
         </div>
     </div>
 </div>
-</div>
 
-<div th:replace="fragments/statics.html :: scripts">
-</div>
+<div th:replace="fragments/statics.html :: scripts"></div>
 
 </body>
 </html>
