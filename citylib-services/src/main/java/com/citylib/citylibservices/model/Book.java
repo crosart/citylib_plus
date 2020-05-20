@@ -23,6 +23,7 @@ public class Book {
     private String summary;
     private int quantity;
     private String image;
+    private String genre;
 
     @Transient
     private int available;
