@@ -1,12 +1,10 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>CityLib</title>
-
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-
-
+    <div th:replace="fragments/statics.html :: head"></div>
 </head>
 <body>
 
@@ -21,8 +19,7 @@
     Il reste actuellement <span th:text="${book.available}" /> exemplaires disponibles au prêt !
 </div>
 
-<div th:replace="fragments/statics.html :: scripts">
-</div>
+<div th:replace="fragments/statics.html :: scripts"></div>
 
 </body>
 </html>
