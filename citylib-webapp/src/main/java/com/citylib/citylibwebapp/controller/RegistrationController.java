@@ -1,8 +1,7 @@
 package com.citylib.citylibwebapp.controller;
 
 import com.citylib.citylibwebapp.dto.UserDto;
-import com.citylib.citylibwebapp.model.User;
-import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
+import com.citylib.citylibwebapp.model.UserBean;
 import com.citylib.citylibwebapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.Valid;
 
@@ -35,7 +33,7 @@ public class RegistrationController {
 
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto, BindingResult result) {
-        User existing = userService.findByEmail(userDto.getEmail());
+        UserBean existing = userService.findByEmail(userDto.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "Un compte existe déjà pour cette adresse mail");
         }
