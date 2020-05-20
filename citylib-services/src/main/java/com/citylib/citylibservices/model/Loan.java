@@ -14,13 +14,16 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "book_id")
-    private long bookId;
-    @Column(name = "user_id")
-    private long userId;
-
     private LocalDate due;
     private boolean returned;
     private boolean extended;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
