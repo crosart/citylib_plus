@@ -1,29 +1,40 @@
 package com.citylib.citylibwebapp.proxy;
 
-import com.citylib.citylibwebapp.dto.UserDto;
-import com.citylib.citylibwebapp.model.Book;
-import com.citylib.citylibwebapp.model.User;
+import com.citylib.citylibwebapp.model.BookBean;
+import com.citylib.citylibwebapp.model.LoanBean;
+import com.citylib.citylibwebapp.model.UserBean;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "citylib-services")
 public interface CitylibServicesProxy {
 
-    @GetMapping(value = "/books")
-    List<Book> getAllBooks();
+    @GetMapping("/books")
+    Page<BookBean> getLastBooks();
 
-    @GetMapping(value = "/books/{id}")
-    Book getBookById(@PathVariable("id") long id);
+    @GetMapping("/books/all")
+    Page<BookBean> getAllBooks(@RequestParam("page") String page);
+
+    @GetMapping("books/id/{id}")
+    BookBean getBookById(@PathVariable("id") long id);
+
+    @GetMapping("books/search")
+    Page<BookBean> getBooksByQuery(@RequestParam("query") String query, @RequestParam("page") String page);
 
     @RequestMapping("/users/email/{email}/")
-    User getUserByEmail(@PathVariable("email") String email);
+    UserBean getUserByEmail(@PathVariable("email") String email);
 
     @PostMapping("users/register")
-    User registerUserAccount(User user);
+    UserBean registerUserAccount(UserBean user);
+
+    @GetMapping("/loans/user/{id}")
+    List<LoanBean> getUserLoans(@PathVariable("id") long id);
+
+    @GetMapping("/loans/extend/{id}")
+    ResponseEntity<LoanBean> extendLoan(@PathVariable("id") long id);
 
 }
