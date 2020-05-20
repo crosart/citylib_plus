@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>CityLib</title>
+    <div th:replace="fragments/statics.html :: head"></div>
+</head>
+<body class="bg-primary">
+
+<nav th:replace="fragments/statics.html :: navbar">
+</nav>
+
+<div class="sticky-top pt-4 pb-5" style="background: linear-gradient(180deg, rgba(45,49,141,1) 50%, rgba(255,255,255,0) 100%);">
+    <form th:action="@{/books/search/}" method="get" class="input-group col-md-6 offset-md-3">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fas fa-search"></i></div>
+        </div>
+        <input type="search" class="form-control" name="query" placeholder="Chercher un livre, auteur ou ISBN-13">
+        <input type="hidden" name="page" value="1">
+    </form>
+</div>
+
+<div th:if="${books.isEmpty()}">
+    <div class="text-center mb-5">
+        <p class="mb-1">
+            <strong class="display-4 text-light">Aucun résultat</strong>
+        </p>
+        <img src="/images/splash_noresults.png" class="my-5" />
+    </div>
+</div>
+<div th:unless="${books.isEmpty()}">
+    <div class="text-center mb-5">
+        <p class="mb-1">
+            <strong class="display-4 text-light">Votre recherche</strong>
+        </p>
+        <strong class="display-4 text-light"><i class="fas fa-chevron-down"></i></strong>
+    </div>
+
+    <nav aria-label="Pagination" th:if="${books.totalPages gt 0}">
+        <ul class="pagination justify-content-center">
+            <li th:if="${books.hasPrevious()}">TEST</li>
+            <li th:each="i : ${#numbers.sequence(1, books.totalPages)}" class="page-item" th:classappend="${i eq (books.number + 1)} ? active">
+                <a th:href="@{/books/search/(query=${#httpServletRequest.getParameter('query')},page=${ i })}" th:text="${ i }" class="page-link"></a>
+            </li>
+        </ul>
+    </nav>
+
+    <div th:each="bookBean : ${books}" class="col-xl-8 mx-auto">
+        <div class="jumbotron my-5 shadow-lg py-5" style="background: url('/images/background/bg_jumbotron.jpg') no-repeat center fixed;background-size: cover">
+            <div class="media">
+                <img th:src="${bookBean.image}" class="shadow rounded-lg align-self-center d-none d-xl-block mr-5" width="150" height="auto" />
+                <div class="media-body">
+                    <a th:href="@{|/bookBeans/id/${bookBean.id}|}" class="stretched-link" style="text-decoration: none"><h1 class="display-4 text-light"><span th:text="${bookBean.title}" /></h1></a>
+                    <p class="lead text-light mb-0">Un livre de&nbsp;<span th:text="${bookBean.author}" />&nbsp;aux éditions&nbsp;&quot;<span th:text="${bookBean.editor}" />&quot;</p>
+                    <p class="mt-0">
+                        <span th:text="${bookBean.genre}" class="shadow badge badge-info" />&nbsp;
+                        <span th:text="${bookBean.year}" class="shadow badge badge-primary" />
+                    </p>
+                    <hr class="my-4">
+                    <p class="text-light"><span th:text="${bookBean.summary}" style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 5;" /></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<p></p>
+<div th:replace="fragments/statics.html :: scripts"></div>
+
+
+</body>
+</html>
