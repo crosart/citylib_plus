@@ -15,13 +15,13 @@ public interface CitylibServicesProxy {
     @GetMapping(value = "/books")
     List<BookBean> getAllBooks();
 
-    @GetMapping(value = "/books/{id}")
+    @GetMapping(value = "/books/id/{id}")
     BookBean getBookById(@PathVariable("id") long id);
 
-    @GetMapping(value = "/dueloans")
+    @GetMapping(value = "/loans/due")
     List<LoanBean> getCurrentDueLoans();
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping(value = "/users/id/{id}")
     UserBean getUserById(@PathVariable("id") long id);
 
 }
