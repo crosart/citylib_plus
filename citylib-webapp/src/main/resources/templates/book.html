@@ -6,17 +6,49 @@
     <title>CityLib</title>
     <div th:replace="fragments/statics.html :: head"></div>
 </head>
-<body>
+<body class="bg-primary text-light">
 
 <nav th:replace="fragments/statics.html :: navbar">
 </nav>
 
+<div class="sticky-top pt-4 pb-5" style="background: linear-gradient(180deg, rgba(45,49,141,1) 50%, rgba(255,255,255,0) 100%);">
+    <form th:action="@{/books/search/}" method="get" class="input-group col-md-6 offset-md-3">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fas fa-search"></i></div>
+        </div>
+        <input type="search" class="form-control" name="query" placeholder="Chercher un livre, auteur ou ISBN-13">
+        <input type="hidden" name="page" value="1">
+    </form>
+</div>
 
-<img th:src="${book.image}" alt="Couverture" class="uk-icon-image" />
-<div class="row">
-    <p th:text="${book.title}" />&nbsp;<span th:text="${book.year}" class="uk-badge" />
-    <p th:text="${book.author}" />
-    Il reste actuellement <span th:text="${book.available}" /> exemplaires disponibles au prêt !
+<div class="text-center">
+    <div class="position-relative badge badge-success" th:unless="${book.available} eq 0">
+        <span th:text="${book.available}" /> exemplaires de cet ouvrage sont actuellement disponibles.
+    </div>
+    <div class="position-relative badge badge-danger" th:if="${book.available} eq 0">
+        Cet ouvrage n'est actuellement pas disponible.
+    </div>
+</div>
+
+<div class="my-5 col-xl-8 mx-auto">
+    <div class="jumbotron my-5 shadow-lg py-5" style="background: url('/images/background/bg_jumbotron.jpg') no-repeat center fixed;background-size: cover">
+        <div class="media">
+            <img th:src="${book.image}" class="shadow rounded-lg align-self-center d-none d-xl-block mr-5" width="150" height="auto" />
+            <div class="media-body">
+                <h1 class="display-4 text-light"><span th:text="${book.title}" /></h1>
+                <p class="lead mb-0">Un livre de&nbsp;<span th:text="${book.author}" />&nbsp;aux éditions&nbsp;&quot;<span th:text="${book.editor}" />&quot;</p>
+                <p class="mt-0">
+                    <span th:text="${book.genre}" class="shadow badge badge-info" />&nbsp;
+                    <span th:text="${book.year}" class="shadow badge badge-primary" />&nbsp;
+                    <span class="shadow badge badge-primary text-muted">
+                        ISBN-13 :&nbsp;<span th:text="${book.isbn}" />
+                    </span>
+                </p>
+                <hr class="my-4">
+                <p class=><span th:text="${book.summary}" /></p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div th:replace="fragments/statics.html :: scripts"></div>
