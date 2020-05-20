@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8"/>
     <title>CityLib - Connexion</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <div th:replace="fragments/statics.html :: head"></div>
 </head>
-<body class="bg-primary text-light" style="overflow: hidden;background: url('/images/background/bg_login.jpg') no-repeat fixed top;background-size: cover;">
+<body class="bg-primary text-light" style="overflow: hidden;background: url('/images/background/bg_login.jpg') no-repeat fixed top;background-size: cover;background-position-y: 56px;">
 
 <nav th:replace="fragments/statics.html :: navbar">
 </nav>
@@ -76,7 +76,6 @@
 
 </div>
 
-<div th:replace="fragments/statics.html :: scripts">
-</div>
+<div th:replace="fragments/statics.html :: scripts"></div>
 </body>
 </html>
