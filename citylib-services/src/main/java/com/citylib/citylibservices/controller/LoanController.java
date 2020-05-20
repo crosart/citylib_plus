@@ -34,6 +34,7 @@ public class LoanController {
         if (loanData.isPresent()) {
             Loan _loan = loanData.get();
             _loan.setDue(loanData.get().getDue().plusWeeks(4));
+            _loan.setExtended(true);
             return new ResponseEntity<>(loanRepository.save(_loan), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
