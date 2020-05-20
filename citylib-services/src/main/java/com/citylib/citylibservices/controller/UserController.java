@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -22,14 +23,13 @@ public class UserController {
     @Autowired
     RoleRepository roleRepository;
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping("/id/{id}")
     public Optional<User> getUserById(@PathVariable long id) {
         Optional<User> user = userRepository.findById(id);
-
         return user;
     }
 
-    @GetMapping("/users/email/{email}/")
+    @GetMapping("/email/{email}/")
     public Optional<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userRepository.findByEmail(StringEscapeUtils.unescapeHtml(email));
         if (user.isPresent()) {
@@ -40,7 +40,7 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/users/register")
+    @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User userDto) {
         User user = new User();
         Optional<User> existing = userRepository.findByEmail(userDto.getEmail());
@@ -52,8 +52,7 @@ public class UserController {
             user.setUsername(userDto.getUsername());
             userRepository.save(user);
         }
-
         return new ResponseEntity<User>(userDto, HttpStatus.CREATED);
-
     }
+
 }
