@@ -3,7 +3,7 @@ package com.citylib.citylibwebapp.model;
 import lombok.*;
 
 @Data
-public class Book {
+public class BookBean {
 
     private long id;
     private String isbn;
@@ -14,6 +14,7 @@ public class Book {
     private String summary;
     private int quantity;
     private String image;
+    private String genre;
     private int available;
 
 }
