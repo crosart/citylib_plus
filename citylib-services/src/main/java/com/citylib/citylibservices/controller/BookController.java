@@ -1,42 +1,58 @@
 package com.citylib.citylibservices.controller;
 
+import com.citylib.citylibservices.config.PropertiesConfig;
 import com.citylib.citylibservices.model.Book;
 import com.citylib.citylibservices.model.Loan;
 import com.citylib.citylibservices.repository.BookRepository;
 import com.citylib.citylibservices.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/books")
 public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private LoanRepository loanRepository;
+    @Autowired
+    private PropertiesConfig appProperties;
 
-    @GetMapping(value = "/books")
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    @GetMapping()
+    public Page<Book> getLastBooks() {
+        Pageable pageable = PageRequest.of(0, appProperties.getLastBooks(), Sort.by("id").descending());
+        return bookRepository.findAll(pageable);
     }
 
-    @GetMapping(value = "/books/{id}")
+    @GetMapping("/all")
+    public Page<Book> getAllBooks(@RequestParam("page") String page) {
+        Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, appProperties.getDefaultPageSize(), Sort.by("title").ascending());
+        return bookRepository.findAll(pageable);
+    }
+
+    @GetMapping("/id/{id}")
     public Optional<Book> getBookById(@PathVariable long id) {
         Optional<Book> book = bookRepository.findById(id);
         List<Loan> activeLoans = loanRepository.findByBookIdAndReturnedFalse(id);
-        
         book.get().setAvailable(book.get().getQuantity() - activeLoans.size());
-
         return book;
     }
 
-    @PostMapping(value = "/books")
+    @GetMapping("/search")
+    public Page<Book> getBooksByQuery(@RequestParam("query") String query, @RequestParam("page") String page) {
+
+        Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, appProperties.getDefaultPageSize(), Sort.by("title").ascending());
+        return bookRepository.findByIsbnContainingIgnoreCaseOrTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query, query, pageable);
+    }
+
+    /*
+    @PostMapping
     public ResponseEntity<Void> addBook(@RequestBody Book book) {
         Book addedBook = bookRepository.save(book);
         if (addedBook == null) {
@@ -49,15 +65,20 @@ public class BookController {
                 .toUri();
         return ResponseEntity.created(location).build();
     }
+    */
 
-    @DeleteMapping(value = "/books/{id}")
+    /*
+    @DeleteMapping(/{id})
     public void deleteBook(@PathVariable long id) {
         bookRepository.deleteById(id);
     }
+    */
 
-    @PutMapping(value = "/books")
+    /*
+    @PutMapping
     public void updateBook(@RequestBody Book book) {
         bookRepository.save(book);
     }
+    */
 
 }
