@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8"/>
-    <title>CityLib - Connexion</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <title>CityLib - Nouvel utilisateur</title>
+    <div th:replace="fragments/statics.html :: head"></div>
 </head>
-<body class="bg-primary text-light" style="overflow: hidden;background: url('/images/background/bg_login.jpg') no-repeat fixed top;background-size: cover;">
+<body class="bg-primary text-light" style="overflow: hidden;background: url('/images/background/bg_login.jpg') no-repeat fixed top;background-size: cover;background-position-y: 56px;">
 
 <nav th:replace="fragments/statics.html :: navbar">
 </nav>
@@ -84,10 +84,10 @@
                 </div>
                 <div class="form-group">
                     <div class="row justify-content-center">
-                        <button type="submit" class="btn btn-info font-weight-bold">S'inscrire</button>
+                        <button type="submit" class="btn btn-info font-weight-bold mt-3">S'inscrire</button>
                     </div>
                 </div>
-                <div class="form-group text-center mt-5">
+                <div class="form-group text-center mt-4">
                     <span>Déjà inscrit ? <a href="/login" th:href="@{/login}" class="text-info">Connectez-vous ici !</a></span>
                 </div>
 
@@ -96,8 +96,7 @@
     </div>
 </div>
 
-<div th:replace="fragments/statics.html :: scripts">
-</div>
+<div th:replace="fragments/statics.html :: scripts"></div>
 
 </body>
 </html>
