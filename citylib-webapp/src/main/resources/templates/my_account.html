@@ -19,10 +19,30 @@
         <div class="px-5">
             <hr style="border-color: #304098">
         </div>
-        <div>
-            Retrouvez la liste de vos emprunts en cours et passés
+        <div class="mt-5">
+            <span class="h2 font-italic">
+            Vos emprunts
+            </span>
         </div>
     </div>
+
+    <nav aria-label="Pagination" th:if="${userLoans.totalPages gt 1}">
+        <ul class="pagination justify-content-center mt-5">
+            <li th:if="${userLoans.hasPrevious()}" class="page-item">
+                <a class="page-link" th:href="@{/users/account/(page=${userLoans.number})}">
+                    <span>&laquo;</span>
+                </a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(1, userLoans.totalPages)}" class="page-item" th:classappend="${i eq (userLoans.number + 1)} ? active">
+                <a th:href="@{/books/search/(query=${#httpServletRequest.getParameter('query')},page=${ i })}" th:text="${ i }" class="page-link"></a>
+            </li>
+            <li th:if="${userLoans.hasNext()}" class="page-item">
+                <a class="page-link" th:href="@{/books/search/(page=${userLoans.number + 2})}">
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <div th:each="loanBean : ${userLoans}" class="col-xl-8 mx-auto">
         <div th:unless="${loanBean.returned}">
@@ -49,7 +69,9 @@
                             <p><a th:href="@{|/loans/extend/${loanBean.id}|}" class="btn btn-primary">Vous pouvez étendre la durée de cet emprunt de 4 semaines en cliquant ici !</a></p>
                         </div>
                         <div th:if="${!loanBean.expired && !loanBean.returned}">
-                            Rappel : Ce livre doit être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+                            <div class="alert alert-success">
+                                Rappel : Ce livre doit être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+                            </div>
                         </div>
                     </div>
                 </div>

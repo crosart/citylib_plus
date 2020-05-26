@@ -32,7 +32,7 @@ public interface CitylibServicesProxy {
     UserBean registerUserAccount(UserBean user);
 
     @GetMapping("/loans/user/{id}")
-    Page<LoanBean> getUserLoans(@PathVariable("id") long id);
+    Page<LoanBean> getUserLoans(@PathVariable("id") long id, @RequestParam("page") String page);
 
     @GetMapping("/loans/extend/{id}")
     ResponseEntity<LoanBean> extendLoan(@PathVariable("id") long id);

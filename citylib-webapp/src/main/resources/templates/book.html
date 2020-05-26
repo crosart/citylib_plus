@@ -22,11 +22,11 @@
 </div>
 
 <div class="text-center">
-    <div class="position-relative badge badge-success" th:unless="${book.available} eq 0">
-        <span th:text="${book.available}" /> exemplaires de cet ouvrage sont actuellement disponibles.
+    <div class="position-relative h2 font-weight-lighter" th:unless="${book.available} eq 0">
+        Exemplaire(s) disponibles en bibliothèque : <span th:text="${book.available}" /><span th:unless="${book.available eq book.quantity}">/<span th:text="${book.quantity}" /></span>
     </div>
     <div class="position-relative badge badge-danger" th:if="${book.available} eq 0">
-        Cet ouvrage n'est actuellement pas disponible.
+        Aucun exemplaire disponible actuellement.
     </div>
 </div>
 

@@ -1,9 +1,5 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
-//TODO Add comment
+// Source code recreated from a PageJacksonModule
+// Fixed from https://github.com/rvervaek/spring-cloud-openfeign/commit/5e05790d4a0415bd4e6b9e3342ce92cc0bdf596b#diff-f5cd661470f6eb3e859e27801a744f1b
 
 package com.citylib.citylibwebapp.config;
 
