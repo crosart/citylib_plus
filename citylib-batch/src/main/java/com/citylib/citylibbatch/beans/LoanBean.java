@@ -4,6 +4,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * Object storing all the loan related informations served by the citylib-services service.
+ *
+ * @author crosart
+ */
 @Data
 public class LoanBean {
 

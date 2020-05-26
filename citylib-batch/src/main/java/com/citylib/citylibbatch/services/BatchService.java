@@ -17,12 +17,24 @@ import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Batch job to generate emails to users having not returned their expired loans.
+ *
+ * @author crosart
+ */
+
 @Service
 public class BatchService {
 
     @Autowired
     CitylibServicesProxy servicesProxy;
 
+    /**
+     * Method checking for unreturned expired loans, sending a mail for each retrieved loan.
+     * <p>
+     * A "BEEP" is generated each time the job executes through the Scheduled cron for logging reasons.
+     * </p>
+     */
     @Scheduled(cron = "0 0-59 0-23 * * ?")
     public void mailUnreturnedLoans() {
 
@@ -40,6 +52,14 @@ public class BatchService {
     @Autowired
     SmtpConfig smtpConfig;
 
+    /**
+     * Method building and sending an email with parameters from {@link #mailUnreturnedLoans()}
+     *
+     * @param user {@link UserBean} attached to the retrieved {@link LoanBean}
+     * @param book {@link BookBean} attached to the retrieved {@link LoanBean}
+     *
+     * @author crosart
+     */
     private void sendMail(UserBean user, BookBean book) {
 
         String mailFrom = smtpConfig.getSmtpUser();

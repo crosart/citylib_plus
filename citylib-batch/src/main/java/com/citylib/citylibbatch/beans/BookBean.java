@@ -2,6 +2,11 @@ package com.citylib.citylibbatch.beans;
 
 import lombok.*;
 
+/**
+ * Object storing all the book related informations served by the citylib-services service.
+ *
+ * @author crosart
+ */
 @Data
 public class BookBean {
 

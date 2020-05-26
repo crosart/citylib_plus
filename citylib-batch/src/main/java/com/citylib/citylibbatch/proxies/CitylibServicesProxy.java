@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+/**
+ * OpenFeign Proxy to bridge towards citylib-services service.
+ *
+ * @author crosart
+ */
 @FeignClient(name = "citylib-services")
 public interface CitylibServicesProxy {
 
