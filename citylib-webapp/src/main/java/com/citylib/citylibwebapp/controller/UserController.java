@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Service controller for user related operations.
@@ -37,7 +38,9 @@ public class UserController {
     @GetMapping("/account")
     public String showAccountPage(HttpServletRequest request, Model model, Principal principal) {
         UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
-        Page<LoanBean> userLoans = servicesProxy.getUserLoans(loggedUser.getId(), request.getParameter("page"));
+        String page = Optional.ofNullable(request.getParameter("page")).orElse("1");
+
+        Page<LoanBean> userLoans = servicesProxy.getUserLoans(loggedUser.getId(), page);
         for (LoanBean loanBean : userLoans) {
             if (loanBean.getDue().isBefore(LocalDate.now())) {
                 loanBean.setExpired(true);
