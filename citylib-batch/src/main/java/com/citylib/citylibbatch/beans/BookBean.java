@@ -2,11 +2,7 @@ package com.citylib.citylibbatch.beans;
 
 import lombok.*;
 
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class BookBean {
 
     private long id;
@@ -18,6 +14,7 @@ public class BookBean {
     private String summary;
     private int quantity;
     private String image;
+    private String genre;
     private int available;
 
 }

@@ -2,11 +2,9 @@ package com.citylib.citylibbatch.beans;
 
 import lombok.*;
 
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+import java.util.Collection;
+
+@Data
 public class UserBean {
 
     private long id;

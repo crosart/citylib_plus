@@ -4,18 +4,15 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class LoanBean {
 
     private long id;
-    private long bookId;
-    private long userId;
     private LocalDate due;
     private boolean returned;
     private boolean extended;
+    private BookBean book;
+    private UserBean user;
+    private boolean expired;
 
 }

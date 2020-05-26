@@ -28,8 +28,8 @@ public class BatchService {
 
         List<LoanBean> dueLoans = servicesProxy.getCurrentDueLoans();
         for (int i = 0; i < dueLoans.size(); i++) {
-            UserBean user = servicesProxy.getUserById(dueLoans.get(i).getUserId());
-            BookBean book = servicesProxy.getBookById(dueLoans.get(i).getBookId());
+            UserBean user = dueLoans.get(i).getUser();
+            BookBean book = dueLoans.get(i).getBook();
             this.sendMail(user, book);
         }
 
@@ -44,7 +44,7 @@ public class BatchService {
 
         String mailFrom = smtpConfig.getSmtpUser();
         String mailSubject = "Citylib : Rappel pour votre emprunt de livre";
-        String mailText = "Livre à ramener : ";
+        String mailText = "Votre prêt de livre est expiré, veuillez nous retourner : ";
 
         Properties prop = System.getProperties();
 
