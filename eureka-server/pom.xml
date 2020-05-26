@@ -75,7 +75,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<repository>crosart/${project.artifactId}</repository>
+					<repository>eu.gcr.io/sinuous-crow-275707/${project.artifactId}</repository>
 					<tag>${project.version}</tag>
 					<buildArgs>
 						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
