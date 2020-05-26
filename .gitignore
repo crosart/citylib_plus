@@ -2,6 +2,8 @@
 # Created by https://www.gitignore.io/api/intellij
 # Edit at https://www.gitignore.io/?templates=intellij
 
+citylib-docker/**
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -93,3 +95,32 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/intellij
+docker/
+
+citylib-certificate.yaml
+
+create_db.sh
+
+credentials.json
+
+data.sql
+
+deployment.yaml
+
+docker-compose.yml
+
+Dockerfile-database
+
+ingress-citylib.yaml
+
+init.sql
+
+loadbalancer-service.yaml
+
+nodeport-service.yaml
+
+schema.sql
+
+secrets.txt
+
+service-account.yaml
