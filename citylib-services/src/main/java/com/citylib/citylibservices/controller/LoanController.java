@@ -32,8 +32,8 @@ public class LoanController {
     }
 
     @GetMapping("/user/{id}")
-    public Page<Loan> getUserLoansByUserId(@PathVariable long id) {
-        Pageable pageable = PageRequest.of(0, appProperties.getLastBooks(), Sort.by("id").descending());
+    public Page<Loan> getUserLoansByUserId(@PathVariable long id, @RequestParam("page") String page) {
+        Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, appProperties.getDefaultPageSize(), Sort.by("id").descending());
         return loanRepository.findByUserId(id, pageable);
     }
 
