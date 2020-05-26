@@ -1,6 +1,3 @@
-// Source code recreated from a PageJacksonModule
-// Fixed from https://github.com/rvervaek/spring-cloud-openfeign/commit/5e05790d4a0415bd4e6b9e3342ce92cc0bdf596b#diff-f5cd661470f6eb3e859e27801a744f1b
-
 package com.citylib.citylibwebapp.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,6 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+/**
+ * PageJacksonModule replacement class to fix error on JsonProperty "number" incorrectly decoded to a "page" property.
+ *
+ * Fixed from <a href="https://github.com/rvervaek/spring-cloud-openfeign/commit/5e05790d4a0415bd4e6b9e3342ce92cc0bdf596b#diff-f5cd661470f6eb3e859e27801a744f1b">Github FIX GH237</a>
+ */
 public class PageJacksonModuleFixGH237 extends Module {
     public PageJacksonModuleFixGH237() {
     }

@@ -4,6 +4,11 @@ import lombok.Data;
 
 import java.util.Collection;
 
+/**
+ * Object storing all the user related informations served by the citylib-services service.
+ *
+ * @author crosart
+ */
 @Data
 public class UserBean {
 

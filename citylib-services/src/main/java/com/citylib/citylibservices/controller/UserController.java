@@ -13,22 +13,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * REST Controller centralizing all the user related operations.
+ *
+ * @author crosart
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     RoleRepository roleRepository;
 
+    /**
+     * Retrieves the user corresponding to the served id.
+     *
+     * @param id ID of the user.
+     * @return The retrieved user (or empty object if not found).
+     */
     @GetMapping("/id/{id}")
     public Optional<User> getUserById(@PathVariable long id) {
         Optional<User> user = userRepository.findById(id);
         return user;
     }
 
+    /**
+     * Retrieves the user corresponding to the served email.
+     *
+     * @param email Email of the user.
+     * @return The retrieved user (or empty object if not found).
+     */
     @GetMapping("/email/{email}/")
     public Optional<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userRepository.findByEmail(StringEscapeUtils.unescapeHtml(email));
@@ -40,6 +56,12 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Registers a new user in the database.
+     *
+     * @param userDto The object containing the required infos for registering (email, password, username)
+     * @return Http Code 201 with the registered infos for confirmation purposes.
+     */
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User userDto) {
         User user = new User();

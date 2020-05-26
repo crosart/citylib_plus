@@ -10,12 +10,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * Service controller for general operations.
+ *
+ * @author crosart
+ */
 @Controller
 public class WebappController {
 
     @Autowired
     private CitylibServicesProxy servicesProxy;
 
+    /**
+     * Presents the index page, containing the last books added to the database.
+     *
+     * @param model Parameters to pass to the webpage.
+     * @return The template name.
+     */
     @GetMapping("/")
     public String index(Model model) {
         Page<BookBean> booksPage = servicesProxy.getLastBooks();

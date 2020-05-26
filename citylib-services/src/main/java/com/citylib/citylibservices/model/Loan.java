@@ -5,6 +5,11 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Loan entity linked to the database.
+ *
+ * @author crosart
+ */
 @Entity
 @Data
 @Table(schema = "citylib_db", name = "loans")

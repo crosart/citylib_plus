@@ -8,6 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * JpaRepository extension for loan related operations.
+ *
+ * @author crosart
+ */
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findByBookIdAndReturnedFalse(long id);
     List<Loan> findByDueLessThanEqualAndReturnedFalse(LocalDate date);

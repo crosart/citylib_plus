@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Service Controller for loan related operations.
+ *
+ * @author crosart
+ */
 @Controller
 @RequestMapping("/loans")
 public class LoanController {
@@ -16,6 +21,12 @@ public class LoanController {
     @Autowired
     CitylibServicesProxy servicesProxy;
 
+    /**
+     * Extends the selected loan due date.
+     *
+     * @param id ID of the loan.
+     * @return The template name.
+     */
     @GetMapping("/extend/{id}")
     public String extendLoan(@PathVariable("id") long id) {
         servicesProxy.extendLoan(id);

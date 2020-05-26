@@ -26,7 +26,6 @@
             </div>
 
             <form th:action="@{/registration}" th:object="${user}" method="post" class="mx-auto">
-
                 <p class="error-message"
                    th:if="${#fields.hasGlobalErrors()}"
                    th:each="error : ${#fields.errors('global')}"
@@ -90,7 +89,6 @@
                 <div class="form-group text-center mt-4">
                     <span>Déjà inscrit ? <a href="/login" th:href="@{/login}" class="text-info">Connectez-vous ici !</a></span>
                 </div>
-
             </form>
         </div>
     </div>

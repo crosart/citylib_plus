@@ -4,6 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/**
+ * Role entity linked to the database.
+ *
+ * @author crosart
+ */
 @Entity
 @Data
 @Table(schema = "citylib_db", name = "roles")

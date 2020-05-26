@@ -1,11 +1,14 @@
 package com.citylib.citylibservices.model;
 
-
 import lombok.Data;
 
 import javax.persistence.*;
 
-
+/**
+ * Book entity linked to the database.
+ *
+ * @author crosart
+ */
 @Entity
 @Data
 @Table(schema = "citylib_db", name = "books")

@@ -5,6 +5,11 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * User entity linked to the database.
+ *
+ * @author crosart
+ */
 @Entity
 @Data
 @Table(schema = "citylib_db", name = "users")

@@ -16,6 +16,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * REST Controller centralizing all the loan related operations.
+ *
+ * @author crosart
+ */
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
@@ -25,22 +30,39 @@ public class LoanController {
     @Autowired
     private PropertiesConfig appProperties;
 
-
+    /**
+     * Retrieves current unreturned due loans.
+     *
+     * @return The list of unreturned due loans.
+     */
     @GetMapping("/due")
     public List<Loan> getCurrentDueLoans() {
         return loanRepository.findByDueLessThanEqualAndReturnedFalse(LocalDate.now());
     }
 
+    /**
+     * Retrieves all loans, past and present, for a specified user.
+     *
+     * @param id ID of the user.
+     * @param page Current page number.
+     * @return The pageable list of loans.
+     */
     @GetMapping("/user/{id}")
     public Page<Loan> getUserLoansByUserId(@PathVariable long id, @RequestParam("page") String page) {
         Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, appProperties.getDefaultPageSize(), Sort.by("id").descending());
         return loanRepository.findByUserId(id, pageable);
     }
 
+    /**
+     * Extends the selected loan due date by 4 weeks, only if it hasn't already been extended.
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/extend/{id}")
     public ResponseEntity<Loan> extendLoan(@PathVariable("id") long id) {
         Optional<Loan> loanData = loanRepository.findById(id);
-        if (loanData.isPresent()) {
+        if (loanData.isPresent() && !loanData.get().isExtended()) {
             Loan _loan = loanData.get();
             _loan.setDue(loanData.get().getDue().plusWeeks(4));
             _loan.setExtended(true);
@@ -49,8 +71,5 @@ public class LoanController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-//    @GetMapping("loans/user/{id}")
-//    public List<Loan> getUserLoans(@PathVariable "id" long id)
 
 }

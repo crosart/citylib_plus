@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+/**
+ * OpenFeign Proxy to bridge towards citylib-services service.
+ *
+ * @author crosart
+ */
 @FeignClient(name = "citylib-services")
 public interface CitylibServicesProxy {
 
