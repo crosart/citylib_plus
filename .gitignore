@@ -113,7 +113,7 @@ Dockerfile-database
 
 ingress-citylib.yaml
 
-init.sql
+create.sql
 
 loadbalancer-service.yaml
 
