@@ -30,7 +30,7 @@ public class LoanController {
     @GetMapping("/extend/{id}")
     public String extendLoan(@PathVariable("id") long id) {
         servicesProxy.extendLoan(id);
-        return "redirect:/users/account";
+        return "redirect:/users/account/?page=1";
     }
 
 }
