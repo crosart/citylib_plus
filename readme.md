@@ -29,16 +29,18 @@
   - Le déploiement a été effectué grâce à ***Docker*** sur ***Google Cloud Platform*** via ***Kubernetes Engine***.
 - Le *projet* est géré par ***Apache Maven***.
 - Les *services de l'application* se buildent par Maven au format ***.jar***.
-- Les *frameworks* utilisés sont :
+- Les *outils* utilisés sont :
   - ***Spring Boot*** / ***Spring JPA***
-  - ***Apache Struts 2***
+  - ***JavaMail***
+  - ***Lombok***
+  - ***Thymeleaf***
   - ***Bootstrap 4***
 - L'*application* s'appuie sur les services :
   - ***Spring Cloud Config*** pour distribuer les configurations de chaque service.
   - ***Netflix Eureka*** pour le routage des requêtes entre services.
   - ***Swagger2*** pour une vue globale des *endpoints* du backend.
 - La *base de données* est déployée sur un serveur ***PostgreSQL 12***.
-- L'*application* est déployée sur un serveur ***Apache Tomcat v9***.
+- L'*application* est déployée sur un serveur ***Apache Tomcat***.
 - Chaque *service* embarque un Dockerfile pour un possible déploiement containerisé grâce à ***Docker***.
 - Pour le service "*citylib-services*", il est nécessaire de saisir en variable d'environnement :
   - DB_URL = l'adresse du serveur PostgreSQL au format >> *jdbc:postgresql://(host):(port)/(db_name)*.
@@ -49,7 +51,7 @@
   - citylib_smtpPass = le mot de passe de connexion au serveur SMTP à utiliser.
   - citylib_smtpHost = l'adresse de l'hôte du serveur SMTP à utiliser.
   - citylib_smtpPort = le port du serveur SMTP à utiliser.
-- Chaque service est câble par défaut pour chercher le serveur Netflix Eureka Discovery à l'adresse *http://localhost:8761/eureka*, cela peut être modifié par l'ajout en variable d'environnement de EUREKA_SERVER lors du déploiement.
+- Chaque service est câblé par défaut pour chercher le serveur Netflix Eureka Discovery à l'adresse *http://localhost:8761/eureka*, cela peut être modifié par l'ajout en variable d'environnement de EUREKA_SERVER lors du déploiement.
 
 ## RESSOURCES
 - Le *script SQL* nécessaire pour créer la base de données, avec un jeu de données de test, sur un serveur *PostgreSQL 12* est située : "*/DEPLOYMENT RESOURCES/create_db*.***sql***"
