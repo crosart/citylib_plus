@@ -1,0 +1,2 @@
+[submodule "config-server-repo"]
+	url = git@github.com:crosart/config-server-repo.git
