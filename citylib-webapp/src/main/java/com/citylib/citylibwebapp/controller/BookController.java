@@ -55,8 +55,8 @@ public class BookController {
         BookBean book = servicesProxy.getBookById(id);
         List<ReservationBean> listReservations = servicesProxy.getReservationsListByBookId(id);
         List<LoanBean> listLoans = servicesProxy.getLoansListByBookId(id);
-        boolean isReserved = this.checkIfReserved(listReservations, new String(Long.toString(loggedUser.getId())));
-        boolean isLoaned = this.checkIfLoaned(listLoans, new String(Long.toString(loggedUser.getId())));
+        book.setReserved(this.checkIfReserved(listReservations, new String(Long.toString(loggedUser.getId()))));
+        book.setLoaned(this.checkIfLoaned(listLoans, new String(Long.toString(loggedUser.getId()))));
 
         model.addAttribute("book", book);
         model.addAttribute("listReservations", listReservations);
