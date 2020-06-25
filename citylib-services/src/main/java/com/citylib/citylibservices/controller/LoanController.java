@@ -40,6 +40,11 @@ public class LoanController {
         return loanRepository.findByDueLessThanEqualAndReturnedFalse(LocalDate.now());
     }
 
+    @GetMapping("/book/{id}")
+    public List<Loan> getLoansListByBookId(@PathVariable("id") long id) {
+        return loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(id);
+    }
+
     /**
      * Retrieves all loans, past and present, for a specified user.
      *
