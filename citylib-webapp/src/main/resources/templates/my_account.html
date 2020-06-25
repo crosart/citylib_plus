@@ -57,21 +57,18 @@
                             <span th:text="${loanBean.book.year}" class="shadow badge badge-primary" />
                         </p>
                         <hr class="my-4">
-                        <div th:if="${loanBean.expired && loanBean.extended && !loanBean.returned}">
+                        <div th:if="${loanBean.expired && !loanBean.returned}">
                             <div class="alert alert-danger">
                                 Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" /> et doit être retourné à la bibliothèque immédiatement !
                             </div>
-                        </div>
-                        <div th:if="${loanBean.expired && !loanBean.extended && !loanBean.returned}">
-                            <div class="alert alert-warning">
-                                Ce livre devait être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />.
-                            </div>
-                            <p><a th:href="@{|/loans/extend/${loanBean.id}|}" class="btn btn-primary">Vous pouvez étendre la durée de cet emprunt de 4 semaines en cliquant ici !</a></p>
                         </div>
                         <div th:if="${!loanBean.expired && !loanBean.returned}">
                             <div class="alert alert-success">
                                 Rappel : Ce livre doit être retourné avant le <span th:text="${#temporals.format(loanBean.due, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
                             </div>
+                            <p th:if="${!loanBean.extended}">
+                                <a th:href="@{|/loans/extend/${loanBean.id}|}" class="btn btn-primary">Vous pouvez étendre la durée de cet emprunt de 4 semaines en cliquant ici !</a>
+                            </p>
                         </div>
                     </div>
                 </div>
