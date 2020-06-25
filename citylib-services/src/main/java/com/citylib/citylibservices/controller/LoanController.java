@@ -62,13 +62,17 @@ public class LoanController {
     @GetMapping("/extend/{id}")
     public ResponseEntity<Loan> extendLoan(@PathVariable("id") long id) {
         Optional<Loan> loanData = loanRepository.findById(id);
-        if (loanData.isPresent() && !loanData.get().isExtended()) {
-            Loan _loan = loanData.get();
-            _loan.setDue(loanData.get().getDue().plusWeeks(4));
-            _loan.setExtended(true);
-            return new ResponseEntity<>(loanRepository.save(_loan), HttpStatus.OK);
+        if (loanData.get().getDue().isAfter(LocalDate.now())) {
+            if (loanData.isPresent() && !loanData.get().isExtended()) {
+                Loan _loan = loanData.get();
+                _loan.setDue(loanData.get().getDue().plusWeeks(4));
+                _loan.setExtended(true);
+                return new ResponseEntity<>(loanRepository.save(_loan), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
     }
 
