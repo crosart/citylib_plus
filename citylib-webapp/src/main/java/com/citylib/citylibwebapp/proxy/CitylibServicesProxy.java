@@ -50,6 +50,9 @@ public interface CitylibServicesProxy {
     @GetMapping("/loans/extend/{id}")
     ResponseEntity<LoanBean> extendLoan(@PathVariable("id") long id);
 
+    @GetMapping("/loans/book/{id}")
+    List<LoanBean> getLoansListByBookId(@PathVariable("id") long id );
+
     // Reservations
 
     @GetMapping("/reservations/book/{id}")

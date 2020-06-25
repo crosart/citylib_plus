@@ -1,6 +1,9 @@
 package com.citylib.citylibwebapp.controller;
 
 import com.citylib.citylibwebapp.model.BookBean;
+import com.citylib.citylibwebapp.model.LoanBean;
+import com.citylib.citylibwebapp.model.ReservationBean;
+import com.citylib.citylibwebapp.model.UserBean;
 import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
 
 /**
  * Service controller for book related operations.
@@ -45,10 +50,34 @@ public class BookController {
      * @return The template name.
      */
     @GetMapping("/id/{id}")
-    public String bookDetail(@PathVariable int id, Model model) {
+    public String bookDetail(@PathVariable("id") int id, Model model, Principal principal) {
+        UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
         BookBean book = servicesProxy.getBookById(id);
+        List<ReservationBean> listReservations = servicesProxy.getReservationsListByBookId(id);
+        List<LoanBean> listLoans = servicesProxy.getLoansListByBookId(id);
+        boolean isReserved = this.checkIfReserved(listReservations, new String(Long.toString(loggedUser.getId())));
+        boolean isLoaned = this.checkIfLoaned(listLoans, new String(Long.toString(loggedUser.getId())));
+
         model.addAttribute("book", book);
+        model.addAttribute("listReservations", listReservations);
+        model.addAttribute("listLoans", listLoans);
         return "book";
+    }
+
+    public static boolean checkIfReserved(List<ReservationBean> listReservations, String userId) {
+        if (listReservations.stream().filter(reservationBean -> userId.equals(reservationBean.getUser().getId())).findFirst().orElse(null) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean checkIfLoaned(List<LoanBean> listLoans, String userId) {
+        if (listLoans.stream().filter(loanBean -> userId.equals(loanBean.getUser().getId())).findFirst().orElse(null) == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
