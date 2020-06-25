@@ -66,7 +66,7 @@ public class BookController {
     @GetMapping("/id/{id}")
     public Optional<Book> getBookById(@PathVariable long id) {
         Optional<Book> book = bookRepository.findById(id);
-        List<Loan> activeLoans = loanRepository.findByBookIdAndReturnedFalse(id);
+        List<Loan> activeLoans = loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(id);
         book.get().setAvailable(book.get().getQuantity() - activeLoans.size());
         return book;
     }
