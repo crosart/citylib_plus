@@ -1,8 +1,15 @@
 package com.citylib.citylibservices.controller;
 
 import com.citylib.citylibservices.config.PropertiesConfig;
+import com.citylib.citylibservices.exception.MaxedException;
+import com.citylib.citylibservices.exception.NotFoundException;
+import com.citylib.citylibservices.model.Book;
 import com.citylib.citylibservices.model.Loan;
+import com.citylib.citylibservices.model.User;
+import com.citylib.citylibservices.repository.BookRepository;
 import com.citylib.citylibservices.repository.LoanRepository;
+import com.citylib.citylibservices.repository.UserRepository;
+import com.citylib.citylibservices.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +35,13 @@ public class LoanController {
     @Autowired
     private LoanRepository loanRepository;
     @Autowired
+    private BookRepository bookRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private PropertiesConfig appProperties;
+    @Autowired
+    private LoanService loanService;
 
     /**
      * Retrieves current unreturned due loans.
@@ -79,6 +92,45 @@ public class LoanController {
             }
         } else {
             return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+        }
+    }
+
+    @GetMapping("/add/{userId}/{bookId}")
+    public void addLoan(@PathVariable("bookId") long bookId, @PathVariable("userId") long userId) throws NotFoundException, MaxedException {
+        Loan newLoan = new Loan();
+        Optional<Book> loanedBook = bookRepository.findById(bookId);
+        Optional<User> loaningUser = userRepository.findById(userId);
+        if (loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(bookId).size() < loanedBook.get().getQuantity()) {
+            newLoan.setDue(LocalDate.now().plusWeeks(4));
+            if (loanedBook.isPresent()) {
+                newLoan.setBook(loanedBook.get());
+                if (loaningUser.isPresent()) {
+                    newLoan.setUser(loaningUser.get());
+                    loanRepository.save(newLoan);
+                } else {
+                    throw new NotFoundException("L'utilisateur demandé n'existe pas. ID=" + userId);
+                }
+            } else {
+                throw new NotFoundException("Le livre demandé n'existe pas. ID=" + bookId);
+            }
+        } else {
+            throw new MaxedException("Tous les exemplaires du livre demandé sont actuellement empruntés, emprunt impossible. ID=" + bookId);
+        }
+    }
+
+    @GetMapping("/return/{id}")
+    public void returnLoan(@PathVariable("loanId") long loanId) throws NotFoundException {
+        Optional<Loan> requestedLoan = loanRepository.findById(loanId);
+        if (!requestedLoan.isPresent()) {
+            throw new NotFoundException("L'emprunt demandé n'existe pas. ID=" + loanId);
+        } else {
+            List<Loan> bookLoans = this.getLoansListByBookId(requestedLoan.get().getBook().getId());
+            requestedLoan.get().setReturned(true);
+            loanRepository.save(requestedLoan.get());
+            // TODO DECLENCHER ENVOI MAIL RESERVATION
+            if (bookLoans.size() == requestedLoan.get().getBook().getQuantity()) {
+                loanService.sendMailToFirstReservation(requestedLoan.get().getBook().getId());
+            }
         }
     }
 
