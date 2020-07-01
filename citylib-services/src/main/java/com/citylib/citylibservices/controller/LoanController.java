@@ -5,9 +5,11 @@ import com.citylib.citylibservices.exception.MaxedException;
 import com.citylib.citylibservices.exception.NotFoundException;
 import com.citylib.citylibservices.model.Book;
 import com.citylib.citylibservices.model.Loan;
+import com.citylib.citylibservices.model.Reservation;
 import com.citylib.citylibservices.model.User;
 import com.citylib.citylibservices.repository.BookRepository;
 import com.citylib.citylibservices.repository.LoanRepository;
+import com.citylib.citylibservices.repository.ReservationRepository;
 import com.citylib.citylibservices.repository.UserRepository;
 import com.citylib.citylibservices.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ public class LoanController {
     private BookRepository bookRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
     @Autowired
     private PropertiesConfig appProperties;
     @Autowired
@@ -95,26 +99,28 @@ public class LoanController {
         }
     }
 
-    @GetMapping("/add/{userId}/{bookId}")
+    @GetMapping("/add/user/{userId}/book/{bookId}")
     public void addLoan(@PathVariable("bookId") long bookId, @PathVariable("userId") long userId) throws NotFoundException, MaxedException {
         Loan newLoan = new Loan();
         Optional<Book> loanedBook = bookRepository.findById(bookId);
         Optional<User> loaningUser = userRepository.findById(userId);
-        if (loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(bookId).size() < loanedBook.get().getQuantity()) {
-            newLoan.setDue(LocalDate.now().plusWeeks(4));
-            if (loanedBook.isPresent()) {
-                newLoan.setBook(loanedBook.get());
+        if (loanedBook.isPresent()) {
+            newLoan.setBook(loanedBook.get());
+            if (loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(bookId).size() < loanedBook.get().getQuantity()) {
+                newLoan.setDue(LocalDate.now().plusWeeks(4));
                 if (loaningUser.isPresent()) {
                     newLoan.setUser(loaningUser.get());
                     loanRepository.save(newLoan);
+                    Optional<Reservation> existingReservation = reservationRepository.getByBook_IdAndUser_Id(bookId, userId);
+                    existingReservation.ifPresent(reservation -> reservationRepository.deleteById(reservation.getId()));
                 } else {
                     throw new NotFoundException("L'utilisateur demandé n'existe pas. ID=" + userId);
                 }
             } else {
-                throw new NotFoundException("Le livre demandé n'existe pas. ID=" + bookId);
+                throw new MaxedException("Tous les exemplaires du livre demandé sont actuellement empruntés, emprunt impossible. ID=" + bookId);
             }
         } else {
-            throw new MaxedException("Tous les exemplaires du livre demandé sont actuellement empruntés, emprunt impossible. ID=" + bookId);
+            throw new NotFoundException("Le livre demandé n'existe pas. ID=" + bookId);
         }
     }
 
