@@ -44,6 +44,11 @@ public class ReservationController {
         return reservationRepository.findByUser_IdOrderByIdAsc(id);
     }
 
+    @GetMapping("/notified")
+    public List<Reservation> getNotifiedReservations() {
+        return reservationRepository.getAllByNotificationDateNotNull();
+    }
+
     @PostMapping("/reservation/add")
     public ResponseEntity<Reservation> addReservationOfBookForUser(@RequestBody ReservationDto reservationDto) throws NotFoundException, MaxedException {
         Reservation newReservation = new Reservation();
