@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service controller for book related operations.
@@ -43,7 +44,7 @@ public class BookController {
     }
 
     /**
-     * Retrieved the properties of a requested book.
+     * Retrieve the properties of a requested book.
      *
      * @param id ID of the book.
      * @param model Parameters to pass to the webpage.
@@ -51,33 +52,18 @@ public class BookController {
      */
     @GetMapping("/id/{id}")
     public String bookDetail(@PathVariable("id") int id, Model model, Principal principal) {
-        UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
         BookBean book = servicesProxy.getBookById(id);
         List<ReservationBean> listReservations = servicesProxy.getReservationsListByBookId(id);
         List<LoanBean> listLoans = servicesProxy.getLoansListByBookId(id);
-        book.setReserved(this.checkIfReserved(listReservations, new String(Long.toString(loggedUser.getId()))));
-        book.setLoaned(this.checkIfLoaned(listLoans, new String(Long.toString(loggedUser.getId()))));
-
+        if (principal != null) {
+            UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
+            book.setReserved(listReservations.stream().map(ReservationBean::getUser).mapToLong(UserBean::getId).anyMatch(Long.valueOf(loggedUser.getId()) :: equals));
+            book.setLoaned(listLoans.stream().map(LoanBean::getUser).mapToLong(UserBean::getId).anyMatch(Long.valueOf(loggedUser.getId()) :: equals));
+        }
         model.addAttribute("book", book);
         model.addAttribute("listReservations", listReservations);
         model.addAttribute("listLoans", listLoans);
         return "book";
-    }
-
-    public static boolean checkIfReserved(List<ReservationBean> listReservations, String userId) {
-        if (listReservations.stream().filter(reservationBean -> userId.equals(reservationBean.getUser().getId())).findFirst().orElse(null) == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean checkIfLoaned(List<LoanBean> listLoans, String userId) {
-        if (listLoans.stream().filter(loanBean -> userId.equals(loanBean.getUser().getId())).findFirst().orElse(null) == null) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
 }
