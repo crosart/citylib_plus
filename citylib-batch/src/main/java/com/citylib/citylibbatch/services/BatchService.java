@@ -2,6 +2,7 @@ package com.citylib.citylibbatch.services;
 
 import com.citylib.citylibbatch.beans.BookBean;
 import com.citylib.citylibbatch.beans.LoanBean;
+import com.citylib.citylibbatch.beans.ReservationBean;
 import com.citylib.citylibbatch.beans.UserBean;
 import com.citylib.citylibbatch.config.SmtpConfig;
 import com.citylib.citylibbatch.proxies.CitylibServicesProxy;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +30,8 @@ public class BatchService {
 
     @Autowired
     CitylibServicesProxy servicesProxy;
+    @Autowired
+    SmtpConfig smtpConfig;
 
     /**
      * Method checking for unreturned expired loans, sending a mail for each retrieved loan.
@@ -42,15 +46,12 @@ public class BatchService {
         for (int i = 0; i < dueLoans.size(); i++) {
             UserBean user = dueLoans.get(i).getUser();
             BookBean book = dueLoans.get(i).getBook();
-            this.sendMail(user, book);
+            this.sendMailForUnreturnedLoan(user, book);
         }
 
         Logger logger = LoggerFactory.getLogger(this.getClass());
         logger.info("BEEP");
     }
-
-    @Autowired
-    SmtpConfig smtpConfig;
 
     /**
      * Method building and sending an email with parameters from {@link #mailUnreturnedLoans()}
@@ -60,7 +61,7 @@ public class BatchService {
      *
      * @author crosart
      */
-    private void sendMail(UserBean user, BookBean book) {
+    private void sendMailForUnreturnedLoan(UserBean user, BookBean book) {
 
         String mailFrom = smtpConfig.getSmtpUser();
         String mailSubject = "Citylib : Rappel pour votre emprunt de livre";
@@ -96,6 +97,16 @@ public class BatchService {
             LoggerFactory.getLogger(this.getClass()).info(e.getMessage());
         }
 
+    }
+
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void deleteUnclaimedReservations() {
+        List<ReservationBean> unclaimedReservations = servicesProxy.getNotifiedReservations();
+        for (ReservationBean reservation : unclaimedReservations) {
+            if (reservation.getNotificationDate().isAfter(LocalDate.now().plusDays(2))) {
+                servicesProxy.deleteReservation(reservation.getId());
+            }
+        }
     }
 
 }
