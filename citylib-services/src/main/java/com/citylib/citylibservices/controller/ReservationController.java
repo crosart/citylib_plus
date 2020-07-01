@@ -1,7 +1,7 @@
 package com.citylib.citylibservices.controller;
 
 import com.citylib.citylibservices.dto.ReservationDto;
-import com.citylib.citylibservices.exception.MaxedReservationsException;
+import com.citylib.citylibservices.exception.MaxedException;
 import com.citylib.citylibservices.exception.NotFoundException;
 import com.citylib.citylibservices.model.Book;
 import com.citylib.citylibservices.model.Reservation;
@@ -45,7 +45,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/add")
-    public ResponseEntity<Reservation> addReservationOfBookForUser(@RequestBody ReservationDto reservationDto) throws NotFoundException, MaxedReservationsException {
+    public ResponseEntity<Reservation> addReservationOfBookForUser(@RequestBody ReservationDto reservationDto) throws NotFoundException, MaxedException {
         Reservation newReservation = new Reservation();
         Book requestedBook = bookRepository.findById(reservationDto.getBookId()).orElseThrow(() -> new NotFoundException("Le livre demandé n'existe pas. ID = " + reservationDto.getBookId()));
         User requestingUser = userRepository.findById(reservationDto.getUserId()).orElseThrow(() -> new NotFoundException("L'utilisateur n'existe pas"));
@@ -57,7 +57,7 @@ public class ReservationController {
             if (reservationRepository.countByBook_Id(reservationDto.getBookId()) < (requestedBook.getQuantity() * 2)) {
                 reservationRepository.save(newReservation);
             } else {
-                throw new MaxedReservationsException("Le nombre maximum de réservations est atteint pour ce livre. " +
+                throw new MaxedException("Le nombre maximum de réservations est atteint pour ce livre. " +
                         "Réservations MAX : " + (requestedBook.getQuantity() * 2));
             }
             return new ResponseEntity<>(newReservation, HttpStatus.CREATED);

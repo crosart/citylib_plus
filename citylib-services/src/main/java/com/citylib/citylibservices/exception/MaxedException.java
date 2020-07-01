@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Returns HTTP code 412.
  */
 @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-public class MaxedReservationsException extends Exception {
+public class MaxedException extends Exception {
 
-    public MaxedReservationsException(String message) {
+    public MaxedException(String message) {
         super(message);
     }
 
