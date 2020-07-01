@@ -64,6 +64,7 @@ public class LoanController {
      * @param id
      * @return
      */
+    // TODO
     @GetMapping("/extend/{id}")
     public ResponseEntity<Loan> extendLoan(@PathVariable("id") long id) {
         Optional<Loan> loanData = loanRepository.findById(id);

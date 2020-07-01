@@ -46,18 +46,22 @@ public class ReservationController {
 
     @PostMapping("/reservation/add")
     public ResponseEntity<Reservation> addReservationOfBookForUser(@RequestBody ReservationDto reservationDto) throws NotFoundException, MaxedReservationsException {
-        Reservation newReservation = null;
+        Reservation newReservation = new Reservation();
         Book requestedBook = bookRepository.findById(reservationDto.getBookId()).orElseThrow(() -> new NotFoundException("Le livre demandé n'existe pas. ID = " + reservationDto.getBookId()));
         User requestingUser = userRepository.findById(reservationDto.getUserId()).orElseThrow(() -> new NotFoundException("L'utilisateur n'existe pas"));
-        if (reservationRepository.countByBook_Id(reservationDto.getBookId()) < (requestedBook.getQuantity() * 2)) {
-            newReservation.setBook(requestedBook);
-            newReservation.setUser(requestingUser);
-            reservationRepository.save(newReservation);
+        newReservation.setBook(requestedBook);
+        newReservation.setUser(requestingUser);
+        if (reservationRepository.existsByBook_IdAndUser_Id(reservationDto.getBookId(), reservationDto.getUserId())) {
+            return new ResponseEntity<>(newReservation, HttpStatus.CONFLICT);
         } else {
-            throw new MaxedReservationsException("Le nombre maximum de réservations est atteint pour ce livre. " +
-                    "Réservations MAX : " + (requestedBook.getQuantity() * 2));
+            if (reservationRepository.countByBook_Id(reservationDto.getBookId()) < (requestedBook.getQuantity() * 2)) {
+                reservationRepository.save(newReservation);
+            } else {
+                throw new MaxedReservationsException("Le nombre maximum de réservations est atteint pour ce livre. " +
+                        "Réservations MAX : " + (requestedBook.getQuantity() * 2));
+            }
+            return new ResponseEntity<>(newReservation, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(newReservation, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/reservation/{id}")
