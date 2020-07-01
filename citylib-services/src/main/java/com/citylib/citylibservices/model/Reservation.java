@@ -3,6 +3,7 @@ package com.citylib.citylibservices.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * Reservation entity linked to the database.
@@ -17,6 +18,9 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "notification")
+    private LocalDate notificationDate;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
