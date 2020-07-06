@@ -15,10 +15,6 @@ public class ReservationDto {
 
     @NotNull
     @NotEmpty
-    private long id;
-
-    @NotNull
-    @NotEmpty
     private long bookId;
 
     @NotNull
