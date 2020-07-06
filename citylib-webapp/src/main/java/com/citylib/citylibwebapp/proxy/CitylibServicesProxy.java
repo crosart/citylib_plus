@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * OpenFeign Proxy to bridge towards citylib-services service.
@@ -61,10 +62,16 @@ public interface CitylibServicesProxy {
     @GetMapping("/reservations/user/{id}")
     List<ReservationBean> getReservationsListByUserId(@PathVariable("id") long id);
 
-    @PostMapping("reservations/reservation/add")
+    @GetMapping("/reservations/book/{bookId}/reservation/{reservationId}")
+    long countForwardReservations(@PathVariable("bookId") long bookId, @PathVariable("reservationId") long reservationId);
+
+    @PostMapping("/reservations/reservation/add")
     ReservationDto addNewReservation(ReservationDto reservationDto);
 
-    @DeleteMapping("reservations/reservation/{id}")
+    @DeleteMapping("/reservations/delete/{id}")
     void deleteReservation(@PathVariable("id") long id);
+
+    @GetMapping("/reservations/reservation/{id}")
+    Optional<ReservationBean> getReservationById(@PathVariable("id") long id);
 
 }

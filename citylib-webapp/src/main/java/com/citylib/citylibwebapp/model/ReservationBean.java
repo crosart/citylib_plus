@@ -15,4 +15,6 @@ public class ReservationBean {
     private LocalDate notificationDate;
     private BookBean book;
     private UserBean user;
+    private long position;
+    private LocalDate returnDate;
 }

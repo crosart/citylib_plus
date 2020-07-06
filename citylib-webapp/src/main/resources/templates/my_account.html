@@ -19,9 +19,47 @@
         <div class="px-5">
             <hr style="border-color: #304098">
         </div>
+
+        <div class="my-5">
+            <span class="display-4 border-bottom border-top border-light rounded pb-2">
+            &nbsp;&nbsp;RESERVATIONS&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div th:if="${userReservations.size() eq 0}">
+            <hr style="border-color: #304098">
+                <div class="my-3">
+                    Vous n'avez aucune réservation en attente.
+                </div>
+        </div>
+
+        <div th:each="reservationBean : ${userReservations}" class="my-3">
+            <hr style="border-color: #304098">
+            <div th:text="${reservationBean.book.title}" />
+            <div th:if="${reservationBean.position eq 1}">
+                Vous êtes en tête de la file d'attente.
+            </div>
+            <div th:if="${reservationBean.position eq 2}">
+                Vous êtes en 2<sup>nde</sup> position dans la file d'attente.
+            </div>
+            <div th:if="${reservationBean.position gt 2}">
+                Vous êtes en <span th:text="${reservationBean.position}" /><sup>ème</sup> position dans la file d'attente.
+            </div>
+            <div>
+                Date de retour prévue : <span th:text="${#temporals.format(reservationBean.returnDate, 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+            </div>
+            <div class="mx-auto">
+                <a class="btn-sm btn-danger" th:href="@{|/reservations/delete/${reservationBean.id}|}">
+                    Annuler cette réservation
+                </a>
+            </div>
+
+        </div>
+        <hr style="border-color: #304098">
+
         <div class="mt-5">
-            <span class="h2 font-italic">
-            Vos emprunts
+            <span class="display-4 border-bottom border-top border-light rounded pb-2">
+            &nbsp;&nbsp;EMPRUNTS&nbsp;&nbsp;
             </span>
         </div>
     </div>

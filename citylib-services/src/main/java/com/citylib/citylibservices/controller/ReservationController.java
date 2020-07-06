@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST Controller centralizing all the reservation related operations.
@@ -34,6 +35,11 @@ public class ReservationController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/reservation/{id}")
+    public Optional<Reservation> getReservationById(@PathVariable long id) {
+        return reservationRepository.findById(id);
+    }
+
     @GetMapping("/book/{id}")
     public List<Reservation> getReservationsByBookId(@PathVariable long id) {
         return reservationRepository.findByBook_IdOrderByIdAsc(id);
@@ -47,6 +53,11 @@ public class ReservationController {
     @GetMapping("/notified")
     public List<Reservation> getNotifiedReservations() {
         return reservationRepository.getAllByNotificationDateNotNull();
+    }
+
+    @GetMapping("/book/{bookId}/reservation/{reservationId}")
+    public long countForwardReservations(@PathVariable long bookId, @PathVariable long reservationId) {
+        return reservationRepository.countByBook_IdAndIdLessThan(bookId, reservationId);
     }
 
     @PostMapping("/reservation/add")
@@ -69,7 +80,7 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/reservation/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteReservationById(@PathVariable long id) {
         reservationRepository.deleteById(id);
     }

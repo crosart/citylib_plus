@@ -18,4 +18,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     long countByBook_Id(long bookId);
     List<Reservation> getAllByNotificationDateNotNull();
     Optional<Reservation> getByBook_IdAndUser_Id(long bookId, long userId);
+    long countByBook_IdAndIdLessThan(long bookId, long reservationId);
 }

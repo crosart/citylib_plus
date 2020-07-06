@@ -31,7 +31,7 @@ public interface CitylibServicesProxy {
     @GetMapping(value = "/users/id/{id}")
     UserBean getUserById(@PathVariable("id") long id);
 
-    @DeleteMapping(value = "/reservations/reservation/{id}")
+    @DeleteMapping(value = "/reservations/delete/{id}")
     void deleteReservation(@PathVariable("id") long id);
 
     @GetMapping(value = "/reservations/notified")
