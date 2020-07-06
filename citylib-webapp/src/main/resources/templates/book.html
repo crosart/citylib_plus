@@ -22,11 +22,38 @@
 </div>
 
 <div class="text-center">
-    <div class="position-relative h2 font-weight-lighter" th:unless="${book.available} eq 0">
-        Exemplaire(s) disponibles en bibliothèque : <span th:text="${book.available}" /><span th:unless="${book.available eq book.quantity}">/<span th:text="${book.quantity}" /></span>
+    <div class="position-relative h2 font-weight-lighter" th:if="${listLoans.size() lt book.quantity}">
+        Cet ouvrage est disponible, venez l'emprunter !
     </div>
-    <div class="position-relative badge badge-danger" th:if="${book.available} eq 0">
-        Aucun exemplaire disponible actuellement.
+    <div class="position-relative btn btn-danger mb-3" th:if="${book.available} eq 0" style="pointer-events: none">
+        Aucun exemplaire de cet ouvrage n'est actuellement disponible. Prochaine date de retour : <span th:text="${#temporals.format(listLoans[0].getDue(), 'dd MMMM yyyy', new java.util.Locale('fr', 'FR'))}" />
+    </div>
+    <div class="position-relative" th:if="${listLoans.size() eq book.quantity}">
+        <div class="h3 font-weight-lighter" th:if="${listReservations.size() eq 0}">La file d'attente de réservation pour ce livre est actuellement vide.</div>
+        <div class="h3 font-weight-lighter" th:if="${listReservations.size() eq 1}">Actuellement 1 personne est en file d'attente pour emprunter ce livre.</div>
+        <div class="h3 font-weight-lighter" th:if="${listReservations.size() gt 1}">Actuellement <span th:text="${listReservations.size()}" /> personnes sont en file d'attente pour emprunter ce livre.</div>
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${listReservations.size() lt (book.quantity * 2)}">
+                <div th:if="${book.isReserved() or book.isLoaned()}">
+                    <div>Vous avez déjà réservé ce livre ou en cours d'emprunt</div>
+                </div>
+                <div th:unless="${book.isReserved() or book.isLoaned()}">
+                    <div>Vous pouvez le réserver ! Lorsque le livre sera de retour en bibliothèque, vous recevrez un mail vous proposant de venir le récupérer.</div>
+                    <div>Si vous ne vous manifestez pas dans les 48H après avoir reçu ce mail, votre réservation sera annulée.</div>
+                    <a th:href="@{|/reservations/add/book/${book.id}|}">
+                        <div class="btn btn-info mt-4">RESERVER&nbsp;&nbsp;<i class="fas fa-user-clock"></i></div>
+                    </a>
+                </div>
+            </div>
+            <div th:unless="${listReservations.size() lt (book.quantity * 2)}">
+                <div>La liste de réservation est pleine</div>
+            </div>
+        </div>
+
+        <div sec:authorize="isAnonymous()">
+            <div> Vous pouvez réserver cet ouvrage en vous connectant !</div>
+            <div><a href="/login" class="btn btn-info mt-4">SE CONNECTER&nbsp;&nbsp;<i class="fas fa-user"></i></a></div>
+        </div>
     </div>
 </div>
 

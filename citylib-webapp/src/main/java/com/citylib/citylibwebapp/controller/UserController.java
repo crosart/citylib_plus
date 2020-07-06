@@ -1,6 +1,7 @@
 package com.citylib.citylibwebapp.controller;
 
 import com.citylib.citylibwebapp.model.LoanBean;
+import com.citylib.citylibwebapp.model.ReservationBean;
 import com.citylib.citylibwebapp.model.UserBean;
 import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,8 +41,13 @@ public class UserController {
     public String showAccountPage(HttpServletRequest request, Model model, Principal principal) {
         UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
         String page = Optional.ofNullable(request.getParameter("page")).orElse("1");
-
+        List<ReservationBean> userReservations = servicesProxy.getReservationsListByUserId(loggedUser.getId());
         Page<LoanBean> userLoans = servicesProxy.getUserLoans(loggedUser.getId(), page);
+        for (ReservationBean reservationBean : userReservations) {
+            reservationBean.setPosition(servicesProxy.countForwardReservations(reservationBean.getBook().getId(), reservationBean.getId()) + 1);
+            List<LoanBean> bookLoans = servicesProxy.getLoansListByBookId(reservationBean.getBook().getId());
+            reservationBean.setReturnDate(bookLoans.get(0).getDue());
+        }
         for (LoanBean loanBean : userLoans) {
             if (loanBean.getDue().isBefore(LocalDate.now())) {
                 loanBean.setExpired(true);
@@ -50,6 +57,7 @@ public class UserController {
         }
         model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("userLoans", userLoans);
+        model.addAttribute("userReservations", userReservations);
         return "my_account";
     }
 

@@ -21,5 +21,7 @@ public class BookBean {
     private String image;
     private String genre;
     private int available;
+    private boolean reserved;
+    private boolean loaned;
 
 }
