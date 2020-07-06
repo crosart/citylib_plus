@@ -1,5 +1,6 @@
 package com.citylib.citylibwebapp.controller;
 
+import com.citylib.citylibwebapp.dto.ReservationDto;
 import com.citylib.citylibwebapp.model.ReservationBean;
 import com.citylib.citylibwebapp.model.UserBean;
 import com.citylib.citylibwebapp.proxy.CitylibServicesProxy;
@@ -38,6 +39,20 @@ public class ReservationController {
             throw new Exception("Réservation non trouvée. ID=" + id);
         }
         return "redirect:/users/account/?page=1";
+    }
+
+    @GetMapping("/add/book/{id}")
+    public String addReservation(@PathVariable("id") long id, Principal principal) throws Exception {
+        ReservationDto newReservation = new ReservationDto();
+        if (!principal.getName().isEmpty()) {
+            UserBean loggedUser = servicesProxy.getUserByEmail(principal.getName());
+            newReservation.setBookId(id);
+            newReservation.setUserId(loggedUser.getId());
+            servicesProxy.addNewReservation(newReservation);
+        } else {
+            throw new Exception("Opération non autorisée !");
+        }
+        return "redirect:/books/id/" + id;
     }
 
 }

@@ -40,7 +40,9 @@
                 <div th:unless="${book.isReserved() or book.isLoaned()}">
                     <div>Vous pouvez le réserver ! Lorsque le livre sera de retour en bibliothèque, vous recevrez un mail vous proposant de venir le récupérer.</div>
                     <div>Si vous ne vous manifestez pas dans les 48H après avoir reçu ce mail, votre réservation sera annulée.</div>
-                    <div class="btn btn-info mt-4">RESERVER&nbsp;&nbsp;<i class="fas fa-user-clock"></i></div>
+                    <a th:href="@{|/reservations/add/book/${book.id}|}">
+                        <div class="btn btn-info mt-4">RESERVER&nbsp;&nbsp;<i class="fas fa-user-clock"></i></div>
+                    </a>
                 </div>
             </div>
             <div th:unless="${listReservations.size() lt (book.quantity * 2)}">
