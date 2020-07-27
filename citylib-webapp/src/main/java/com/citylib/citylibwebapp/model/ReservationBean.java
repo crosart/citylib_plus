@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
- * Object storing all the book related informations served by the citylib-services service.
+ * Object storing all the reservation related informations served by the citylib-services service.
  *
  * @author crosart
  */
