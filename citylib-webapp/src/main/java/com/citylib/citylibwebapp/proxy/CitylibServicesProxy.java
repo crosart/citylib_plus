@@ -68,7 +68,7 @@ public interface CitylibServicesProxy {
     @PostMapping("/reservations/reservation/add")
     ReservationDto addNewReservation(ReservationDto reservationDto);
 
-    @DeleteMapping("/reservations/delete/{id}")
+    @DeleteMapping("/reservations/{id}")
     void deleteReservation(@PathVariable("id") long id);
 
     @GetMapping("/reservations/reservation/{id}")
