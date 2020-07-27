@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author crosart
  */
 @Configuration
-@ConfigurationProperties(prefix = "maconfig")
+@ConfigurationProperties(prefix = "smtpconfig")
 @Getter
 @Setter
 public class SmtpConfig {

@@ -48,12 +48,9 @@ public class UserController {
             List<LoanBean> bookLoans = servicesProxy.getLoansListByBookId(reservationBean.getBook().getId());
             reservationBean.setReturnDate(bookLoans.get(0).getDue());
         }
+        // TODO LocalDate
         for (LoanBean loanBean : userLoans) {
-            if (loanBean.getDue().isBefore(LocalDate.now())) {
-                loanBean.setExpired(true);
-            } else {
-                loanBean.setExpired(false);
-            }
+            loanBean.setExpired(loanBean.getDue().isBefore(LocalDate.now()));
         }
         model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("userLoans", userLoans);

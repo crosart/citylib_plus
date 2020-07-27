@@ -4,11 +4,13 @@ import com.citylib.citylibservices.dto.ReservationDto;
 import com.citylib.citylibservices.exception.MaxedException;
 import com.citylib.citylibservices.exception.NotFoundException;
 import com.citylib.citylibservices.model.Book;
+import com.citylib.citylibservices.model.Mail;
 import com.citylib.citylibservices.model.Reservation;
 import com.citylib.citylibservices.model.User;
 import com.citylib.citylibservices.repository.BookRepository;
 import com.citylib.citylibservices.repository.ReservationRepository;
 import com.citylib.citylibservices.repository.UserRepository;
+import com.citylib.citylibservices.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,9 @@ public class ReservationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/reservation/{id}")
     public Optional<Reservation> getReservationById(@PathVariable long id) {
@@ -80,8 +85,20 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteReservationById(@PathVariable long id) {
-        reservationRepository.deleteById(id);
+        Reservation reservation = reservationRepository.getOne(id);
+        reservationRepository.delete(reservation);
+        Optional<Reservation> nextReservation = reservationRepository.findFirstByBook_IdOrderByIdAsc(reservation.getBook().getId());
+        if (reservation.getNotificationDate() != null && nextReservation.isPresent()) {
+            Mail mail = new Mail();
+            mail.setRecipient(nextReservation.get().getUser().getEmail());
+            mail.setSubject("CityLib : Un livre que vous avez réservé est disponible !");
+            mail.setBody(reservation.getBook().getTitle() + "est disponible ! Venez le récupérer à la bibliothèque sous 48H !");
+            mailService.sendMail(mail);
+        } else {
+            return;
+        }
+
     }
 }
