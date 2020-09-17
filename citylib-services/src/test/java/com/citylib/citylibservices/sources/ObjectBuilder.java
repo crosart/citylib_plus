@@ -1,10 +1,7 @@
 package com.citylib.citylibservices.sources;
 
 import com.citylib.citylibservices.dto.UserDto;
-import com.citylib.citylibservices.model.Book;
-import com.citylib.citylibservices.model.Loan;
-import com.citylib.citylibservices.model.Role;
-import com.citylib.citylibservices.model.User;
+import com.citylib.citylibservices.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -114,5 +111,36 @@ public class ObjectBuilder {
             return builtLoan;
         };
         return IntStream.rangeClosed(1, listSize).mapToObj(loanBuilder).collect(Collectors.toList());
+    }
+
+    public Reservation reservation() {
+        Reservation builtReservation = new Reservation();
+        builtReservation.setId(1);
+        builtReservation.setBook(this.book());
+        builtReservation.setUser(this.user());
+        return builtReservation;
+    }
+
+    public List<Reservation> reservationsList(int listSize) {
+        IntFunction<Reservation> reservationBuilder = i -> {
+            Reservation builtReservation = new Reservation();
+            builtReservation.setId(i);
+            builtReservation.setBook(this.book());
+            builtReservation.setUser(this.user());
+            return builtReservation;
+        };
+        return IntStream.rangeClosed(1,listSize).mapToObj(reservationBuilder).collect(Collectors.toList());
+    }
+
+    public List<Reservation> notifiedReservationsList(int listSize) {
+        IntFunction<Reservation> reservationBuilder = i -> {
+            Reservation builtReservation = new Reservation();
+            builtReservation.setId(i);
+            builtReservation.setBook(this.book());
+            builtReservation.setUser(this.user());
+            builtReservation.setNotificationDate(LocalDate.now().minusDays(1));
+            return builtReservation;
+        };
+        return IntStream.rangeClosed(1,listSize).mapToObj(reservationBuilder).collect(Collectors.toList());
     }
 }
