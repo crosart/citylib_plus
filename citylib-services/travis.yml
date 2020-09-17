@@ -1,0 +1,17 @@
+language: java
+
+jdk: openjdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+env:
+  global:
+    - CODECOV_TOKEN="4c6edca0-e8d3-449d-8874-28991f3e3f55"
+
+script:
+  - mvn verify
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
