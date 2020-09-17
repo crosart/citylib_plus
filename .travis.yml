@@ -1,6 +1,8 @@
+git:
+  submodules: false
+
 matrix:
   include:
-    -
       before_script:
         - "cd citylib-services"
       jdk: openjdk8
