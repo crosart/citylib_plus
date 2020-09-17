@@ -1,9 +1,9 @@
-language: java
+before_script:
+  - "cd citylib-services"
 
 jdk: openjdk8
 
-before_script:
-  - "cd citylib-services"
+language: java
 
 cache:
   directories:
