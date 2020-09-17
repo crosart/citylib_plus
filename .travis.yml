@@ -1,20 +1,19 @@
-before_script:
-  - "cd citylib-services"
-
-jdk: openjdk8
-
-language: java
-
-cache:
-  directories:
-    - $HOME/.m2
+matrix:
+  include:
+    -
+      before_script:
+        - "cd citylib-services"
+      jdk: openjdk8
+      language: java
+      cache:
+        directories:
+          - $HOME/.m2
+      script:
+        - mvn verify
 
 env:
   global:
     - CODECOV_TOKEN="4c6edca0-e8d3-449d-8874-28991f3e3f55"
-
-script:
-  - mvn verify
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
