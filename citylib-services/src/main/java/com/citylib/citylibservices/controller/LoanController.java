@@ -102,9 +102,10 @@ public class LoanController {
      * @param loanDto Dto Object containing book and user id
      * @throws NotFoundException throw NotFoundException if user or book doesn't exist
      * @throws MaxedException throw MaxedException if all books are loaned
+     * @return
      */
     @PostMapping("/add")
-    public void addLoan(@RequestBody LoanDto loanDto) throws NotFoundException, MaxedException {
+    public ResponseEntity<Loan> addLoan(@RequestBody LoanDto loanDto) throws NotFoundException, MaxedException {
         Loan newLoan = new Loan();
         Optional<Book> loanedBook = bookRepository.findById(loanDto.getBookId());
         Optional<User> loaningUser = userRepository.findById(loanDto.getUserId());
@@ -117,6 +118,7 @@ public class LoanController {
                     loanRepository.save(newLoan);
                     Optional<Reservation> existingReservation = reservationRepository.getByBook_IdAndUser_Id(loanDto.getBookId(), loanDto.getUserId());
                     existingReservation.ifPresent(reservation -> reservationRepository.deleteById(reservation.getId()));
+                    return new ResponseEntity<Loan>(newLoan, HttpStatus.CREATED);
                 } else {
                     throw new NotFoundException("L'utilisateur demandé n'existe pas. ID=" + loanDto.getUserId());
                 }
