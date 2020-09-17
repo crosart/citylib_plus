@@ -1,17 +1,13 @@
 git:
   submodules: false
 
-matrix:
-  include:
-      before_script:
-        - "cd citylib-services"
-      jdk: openjdk8
-      language: java
-      cache:
-        directories:
-          - $HOME/.m2
-      script:
-        - mvn verify
+jdk: openjdk8
+language: java
+cache:
+  directories:
+    - $HOME/.m2
+script:
+  - mvn verify -f citylib-services/pom.xml
 
 env:
   global:
