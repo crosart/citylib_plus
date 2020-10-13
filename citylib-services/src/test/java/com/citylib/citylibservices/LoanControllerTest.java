@@ -20,12 +20,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -152,13 +155,49 @@ public class LoanControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @DisplayName("GET / Extend loan / Return HTTP-404 if loan ID doesn't exist")
+    @DisplayName("GET / Extend loan / Return HTTP-404 if due date is before today")
     void givenLoanId_whenLoanDueDateIsBeforeNow_shouldRespondHttpNotFound() throws Exception {
         Optional<Loan> vLoan = Optional.ofNullable(objectBuilder.loan());
 
         assumeThat(vLoan).isPresent();
 
         vLoan.get().setDue(LocalDate.now().minusWeeks(1));
+        long vLoanId = 1;
+        when(loanRepository.findById(any(Long.class))).thenReturn(vLoan);
+
+        String body = mockMvc.perform(get("/loans/extend/{id}", vLoanId))
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(body).isEmpty();
+    }
+
+    @Test
+    @DisplayName("GET / Extend loan / Return HTTP-404 if loan already extended")
+    void givenLoanId_whenLoanIsExtended_shouldRespondHttpNotFound() throws Exception {
+        Optional<Loan> vLoan = Optional.ofNullable(objectBuilder.loan());
+
+        assumeThat(vLoan).isPresent();
+
+        vLoan.get().setExtended(true);
+        long vLoanId = 1;
+        when(loanRepository.findById(any(Long.class))).thenReturn(vLoan);
+
+        String body = mockMvc.perform(get("/loans/extend/{id}", vLoanId))
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(body).isEmpty();
+    }
+
+    @Test
+    @DisplayName("GET / Extend loan / Return HTTP-404 if due date is before today")
+    void givenLoanId_whenLoanIsAlreadyExtended_shouldRespondHttpNotFound() throws Exception {
+        Optional<Loan> vLoan = Optional.ofNullable(objectBuilder.loan());
+
+        assumeThat(vLoan).isPresent();
+
+        vLoan.get().setExtended(true);
         long vLoanId = 1;
         when(loanRepository.findById(any(Long.class))).thenReturn(vLoan);
 
@@ -274,6 +313,7 @@ public class LoanControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated());
     }
 
+
     @Test
     @DisplayName("PUT / Return loan / Return NotFoundException if loan ID doesn't exist")
     void givenLoanId_whenLoanNotExists_shouldThrowNotFoundException() throws Exception {
@@ -286,6 +326,27 @@ public class LoanControllerTest extends AbstractControllerTest {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
                 .andExpect(result -> assertEquals("L'emprunt demandé n'existe pas. ID=" + vLoanId, Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
+    }
+
+    @Test
+    @DisplayName("PUT / Return loan / Do not send mail if Loans list size not equals to book quantity")
+    void givenLoanId_whenLoansListSizeNotEqualsBookQuantity_shouldNotSendMail() throws Exception {
+        long vLoanId = 1;
+        Loan vLoan = objectBuilder.loan();
+        Reservation vReservation = objectBuilder.reservation();
+        assumeThat(vLoan).isNotNull();
+        when(loanRepository.findById(vLoanId)).thenReturn(Optional.of(vLoan));
+        when(loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(vLoan.getBook().getId())).thenReturn(objectBuilder.loansList(vLoan.getBook().getQuantity() - 1));
+        when(reservationRepository.findFirstByBook_IdOrderByIdAsc(vLoan.getBook().getId())).thenReturn(Optional.ofNullable(vReservation));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/loans/{loanid}/return", vLoanId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        ArgumentCaptor<Mail> captor = ArgumentCaptor.forClass(Mail.class);
+
+        verify(mailService, times(0)).sendMail(captor.capture());
     }
 
     @Test
@@ -309,7 +370,48 @@ public class LoanControllerTest extends AbstractControllerTest {
         verify(mailService, times(1)).sendMail(captor.capture());
         assertThat(captor.getAllValues()).hasSize(1);
         assertThat(captor.getValue().getSubject()).contains("CityLib");
+    }
 
+    @Test
+    @DisplayName("PUT / Return loan / Do not send mail if no reservation present")
+    void givenLoanId_whenNoReservationExists_shouldNotSendMail() throws Exception {
+        long vLoanId = 1;
+        Loan vLoan = objectBuilder.loan();
+        assumeThat(vLoan).isNotNull();
+        when(loanRepository.findById(vLoanId)).thenReturn(Optional.of(vLoan));
+        when(loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(vLoan.getBook().getId())).thenReturn(objectBuilder.loansList(vLoan.getBook().getQuantity()));
+        when(reservationRepository.findFirstByBook_IdOrderByIdAsc(vLoan.getBook().getId())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/loans/{loanid}/return", vLoanId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        ArgumentCaptor<Mail> captor = ArgumentCaptor.forClass(Mail.class);
+
+        verify(mailService, times(0)).sendMail(captor.capture());
+    }
+
+    @Test
+    @DisplayName("PUT / Return loan / Do not send mail if no reservation present")
+    void givenLoanId_whenNotificationDateExists_shouldNotSendMail() throws Exception {
+        long vLoanId = 1;
+        Loan vLoan = objectBuilder.loan();
+        Reservation vReservation = objectBuilder.reservation();
+        vReservation.setNotificationDate(LocalDate.now().minusDays(1));
+        assumeThat(vLoan).isNotNull();
+        when(loanRepository.findById(vLoanId)).thenReturn(Optional.of(vLoan));
+        when(loanRepository.findByBookIdAndReturnedFalseOrderByDueAsc(vLoan.getBook().getId())).thenReturn(objectBuilder.loansList(vLoan.getBook().getQuantity()));
+        when(reservationRepository.findFirstByBook_IdOrderByIdAsc(vLoan.getBook().getId())).thenReturn(Optional.ofNullable(vReservation));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/loans/{loanid}/return", vLoanId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        ArgumentCaptor<Mail> captor = ArgumentCaptor.forClass(Mail.class);
+
+        verify(mailService, times(0)).sendMail(captor.capture());
     }
 
 }
