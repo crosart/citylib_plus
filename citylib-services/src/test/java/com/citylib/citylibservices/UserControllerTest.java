@@ -11,6 +11,7 @@ import com.citylib.citylibservices.sources.ObjectBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,6 +53,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("GET / User by Id / Returns User")
     void givenId_shouldReturnUserObject() throws Exception {
         long vUserId = 1;
         Optional<User> vUser = Optional.ofNullable(objectBuilder.user());
@@ -69,6 +71,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("GET / User by Mail / Returns User")
     void givenEmail_shouldReturnUserObject() throws Exception {
 
         String vUserEmail = StringEscapeUtils.unescapeHtml("email@mail.com");
@@ -82,8 +85,24 @@ public class UserControllerTest extends AbstractControllerTest {
         User result = new ObjectMapper().readerFor(User.class).readValue(body);
 
         assertThat(result.getRoles()).contains(objectBuilder.role());
-
     }
+
+    @Test
+    @DisplayName("GET / User by Mail / Do not get Roles if user does not exist")
+    void givenEmail_whenUserNotExists_shouldNotGetRoles() throws Exception {
+        String vUserEmail = StringEscapeUtils.unescapeHtml("email@mail.com");
+        when(userRepository.findByEmail(vUserEmail)).thenReturn(Optional.empty());
+
+        String body = mockMvc.perform(get("/users/email/{email}/", vUserEmail))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        User result = new ObjectMapper().readerFor(User.class).readValue(body);
+
+        assertThat(result).isNull();
+        verify(roleRepository, times(0)).findByDefTrue();
+    }
+
 
     @Test
     void givenUserDtoWithExistingEmail_shouldReturnHttpConflictAndThrowException() throws Exception {
