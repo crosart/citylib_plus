@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,18 +87,24 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservationById(@PathVariable long id) {
-        Reservation reservation = reservationRepository.getOne(id);
-        reservationRepository.delete(reservation);
-        Optional<Reservation> nextReservation = reservationRepository.findFirstByBook_IdOrderByIdAsc(reservation.getBook().getId());
-        if (reservation.getNotificationDate() != null && nextReservation.isPresent()) {
-            Mail mail = new Mail();
-            mail.setRecipient(nextReservation.get().getUser().getEmail());
-            mail.setSubject("CityLib : Un livre que vous avez réservé est disponible !");
-            mail.setBody(reservation.getBook().getTitle() + "est disponible ! Venez le récupérer à la bibliothèque sous 48H !");
-            mailService.sendMail(mail);
+    public void deleteReservationById(@PathVariable long id) throws NotFoundException {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+        if (!reservation.isPresent()) {
+            throw new NotFoundException("La réservation que vous souhaitez supprimer n'existe pas. ID=" + id);
         } else {
-            return;
+            reservationRepository.delete(reservation.get());
+            Optional<Reservation> nextReservation = reservationRepository.findFirstByBook_IdOrderByIdAsc(reservation.get().getBook().getId());
+            if (reservation.get().getNotificationDate() != null && nextReservation.isPresent()) {
+                Mail mail = new Mail();
+                mail.setRecipient(nextReservation.get().getUser().getEmail());
+                mail.setSubject("CityLib : Un livre que vous avez réservé est disponible !");
+                mail.setBody(reservation.get().getBook().getTitle() + "est disponible ! Venez le récupérer à la bibliothèque sous 48H !");
+                mailService.sendMail(mail);
+                nextReservation.get().setNotificationDate(LocalDate.now());
+                reservationRepository.save(nextReservation.get());
+            } else {
+                return;
+            }
         }
 
     }
